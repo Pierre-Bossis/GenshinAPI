@@ -1,0 +1,6 @@
+CREATE TABLE [dbo].[Avatars]
+(
+	[Id] INT NOT NULL PRIMARY KEY,
+  [Nom] VARCHAR(50) UNIQUE NOT NULL,
+  [PathAvatar] VARCHAR(50) NOT NULL
+)
