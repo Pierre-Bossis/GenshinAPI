@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Genshin.DAL\Genshin.DAL.csproj" />
+  </ItemGroup>
+
 </Project>
