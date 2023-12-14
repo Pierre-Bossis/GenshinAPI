@@ -21,7 +21,8 @@ namespace GenshinAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_materiauxElevationArmesService.GetAll());
+            IEnumerable<MateriauxElevationArmesDTO> mats = _materiauxElevationArmesService.GetAll().Select(mat => mat.ToDto());
+            return Ok(mats);
         }
 
         [HttpGet("{name}")]
@@ -37,7 +38,6 @@ namespace GenshinAPI.Controllers
         public async Task<IActionResult> Create()
         {
             HttpRequest req = HttpContext.Request;
-
             var form = await Request.ReadFormAsync();
 
             MateriauxElevationArmesFormDTO dto = new MateriauxElevationArmesFormDTO()
@@ -53,7 +53,7 @@ namespace GenshinAPI.Controllers
                 file.CopyTo(memoryStream);
                 dto.Icone = memoryStream.ToArray();
             }
-            _materiauxElevationArmesService.create(dto.ToBLL());
+            _materiauxElevationArmesService.Create(dto.ToBLL());
             return Ok();
 
         }

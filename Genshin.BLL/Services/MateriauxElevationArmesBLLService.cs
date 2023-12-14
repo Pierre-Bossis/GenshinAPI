@@ -18,21 +18,21 @@ namespace Genshin.BLL.Services
             _repo = repo;
         }
 
-        public void create(MateriauxElevationArmes mat)
+        public void Create(MateriauxElevationArmesEntity mat)
         {
             _repo.Create(mat);
         }
 
-        public IEnumerable<MateriauxElevationArmes> GetAll()
+        public IEnumerable<MateriauxElevationArmesEntity> GetAll()
         {
-            IEnumerable<MateriauxElevationArmes> matList = _repo.GetAll();
+            IEnumerable<MateriauxElevationArmesEntity> matList = _repo.GetAll();
 
             return matList;
         }
 
-        public MateriauxElevationArmes GetByName(string name)
+        public MateriauxElevationArmesEntity GetByName(string name)
         {
-            MateriauxElevationArmes mat = _repo.GetByName(name);
+            MateriauxElevationArmesEntity mat = _repo.GetByName(name);
 
             return mat;
         }

@@ -19,25 +19,25 @@ namespace Genshin.DAL.DataAccess
             _connection = connection;
         }
 
-        public void Create(MateriauxElevationArmes mat)
+        public void Create(MateriauxElevationArmesEntity mat)
         {
             string sql = "INSERT INTO MateriauxElevationArmes VALUES (@nom,@icone,@source,@rarete)";
             _connection.ExecuteScalar(sql, new { nom = mat.Nom, icone = mat.Icone, source = mat.Source, rarete = mat.Rarete });
         }
 
-        public MateriauxElevationArmes GetByName(string name)
+        public MateriauxElevationArmesEntity GetByName(string name)
         {
             string sql = "SELECT * FROM MateriauxElevationArmes WHERE Nom = @name";
-            MateriauxElevationArmes? mat = _connection.QuerySingleOrDefault<MateriauxElevationArmes>(sql, new { name = name });
+            MateriauxElevationArmesEntity? mat = _connection.QuerySingleOrDefault<MateriauxElevationArmesEntity>(sql, new { name = name });
             if (mat is not null) return mat;
 
             return null;
         }
 
-        public IEnumerable<MateriauxElevationArmes> GetAll()
+        public IEnumerable<MateriauxElevationArmesEntity> GetAll()
         {
             string sql = "SELECT * FROM MateriauxElevationArmes";
-            return _connection.Query<MateriauxElevationArmes>(sql);
+            return _connection.Query<MateriauxElevationArmesEntity>(sql);
         }
 
         //traitement pour create

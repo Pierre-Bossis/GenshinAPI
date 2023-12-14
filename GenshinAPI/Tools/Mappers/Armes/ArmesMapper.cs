@@ -1,19 +1,17 @@
 ﻿using Genshin.DAL.Entities;
 using GenshinAPI.Models;
-using System.Collections;
-using System.Text;
 
 namespace GenshinAPI.Tools.Mappers.Armes
 {
     public static class ArmesMapper
     {
-        #region Armes
-        public static MateriauxElevationArmes ToBLL(this MateriauxElevationArmesFormDTO dto)
+        #region Materiaux Elevation Armes
+        public static MateriauxElevationArmesEntity ToBLL(this MateriauxElevationArmesFormDTO dto)
         {
             if (dto is not null)
             {
 
-                return new MateriauxElevationArmes
+                return new MateriauxElevationArmesEntity
                 {
                     Nom = dto.Nom,
                     Icone = dto.Icone,
@@ -24,19 +22,66 @@ namespace GenshinAPI.Tools.Mappers.Armes
             return null;
         }
 
-        public static MateriauxElevationArmesDTO ToDto(this MateriauxElevationArmes m)
+        public static MateriauxElevationArmesDTO ToDto(this MateriauxElevationArmesEntity e)
         {
-            if (m is not null)
+            if (e is not null)
             {
-                string base64String = Convert.ToBase64String(m.Icone);
+                string base64String = Convert.ToBase64String(e.Icone);
 
                 return new MateriauxElevationArmesDTO
                 {
-                    Id = m.Id,
-                    Nom = m.Nom,
+                    Id = e.Id,
+                    Nom = e.Nom,
                     Icone = base64String,
-                    Source = m.Source,
-                    Rarete = m.Rarete
+                    Source = e.Source,
+                    Rarete = e.Rarete
+                };
+            }
+            return null;
+        }
+        #endregion
+        #region Armes
+        public static ArmesEntity ToBLL(this ArmesFormDTO dto)
+        {
+            if (dto is not null)
+            {
+
+                return new ArmesEntity
+                {
+                    Nom = dto.Nom,
+                    TypeArme = dto.TypeArme,
+                    Description = dto.Description,
+                    Icone = dto.Icone,
+                    Image = dto.Image,
+                    NomStatPrincipale = dto.NomStatPrincipale,
+                    ValeurStatPrincipale = dto.ValeurStatPrincipale,
+                    EffetPassif = dto.EffetPassif,
+                    ATQBase = dto.ATQBase,
+                    Rarete = dto.Rarete
+                };
+            }
+            return null;
+        }
+
+        public static ArmesDTO ToDto(this ArmesEntity e)
+        {
+            if (e is not null)
+            {
+                string base64Icone = Convert.ToBase64String(e.Icone);
+                string base64Image = Convert.ToBase64String(e.Image);
+
+                return new ArmesDTO
+                {
+                    Nom = e.Nom,
+                    TypeArme = e.TypeArme,
+                    Description = e.Description,
+                    Icone = base64Icone,
+                    Image = base64Image,
+                    NomStatPrincipale = e.NomStatPrincipale,
+                    ValeurStatPrincipale = e.ValeurStatPrincipale,
+                    EffetPassif = e.EffetPassif,
+                    ATQBase = e.ATQBase,
+                    Rarete = e.Rarete
                 };
             }
             return null;

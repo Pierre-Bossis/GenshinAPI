@@ -17,6 +17,9 @@ builder.Services.AddTransient(sp => new SqlConnection(configuration.GetConnectio
 builder.Services.AddScoped<IMateriauxElevationArmesRepository, MateriauxElevationArmesService>();
 builder.Services.AddScoped<IMateriauxElevationArmesBLLService, MateriauxElevationArmesBLLService>();
 
+builder.Services.AddScoped<IArmesRepository, ArmesService>();
+builder.Services.AddScoped<IArmesBLLService, ArmesBLLService>();
+
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
     options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 

@@ -1,7 +1,7 @@
 ﻿
 namespace Genshin.DAL.Entities
 {
-    public class MateriauxElevationArmes
+    public class MateriauxElevationArmesEntity
     {
         public int Id { get; set; }
         public string Nom { get; set; }
