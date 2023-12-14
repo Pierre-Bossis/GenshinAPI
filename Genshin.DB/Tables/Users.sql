@@ -1,10 +1,10 @@
 CREATE TABLE [dbo].[Users]
 (
 	[Id] uniqueidentifier NOT NULL PRIMARY KEY,
-  [Username] VARCHAR(50) NOT NULL UNIQUE,
-  [Email] VARCHAR(70) NOT NULL UNIQUE,
-  [MotDePasse] VARCHAR(MAX) NOT NULL,
-  [IsAdmin] BIT NOT NULL,
+  [Username] VARCHAR(20) NOT NULL UNIQUE,
+  [Email] VARCHAR(50) NOT NULL UNIQUE,
+  [MotDePasse] VARCHAR(20) NOT NULL,
+  [IsAdmin] BIT NOT NULL DEFAULT 0,
   [Avatar_Id] INTEGER DEFAULT 1
 
   CONSTRAINT FK_Avatar FOREIGN KEY (Avatar_Id) REFERENCES Avatars(Id)

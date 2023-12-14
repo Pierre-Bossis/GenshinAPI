@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Tools\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Genshin.BLL\Genshin.BLL.csproj" />
   </ItemGroup>
 

@@ -10,5 +10,7 @@ namespace Genshin.BLL.Interfaces
     public interface IMateriauxElevationArmesBLLService
     {
         IEnumerable<MateriauxElevationArmes> GetAll();
+        void create(MateriauxElevationArmes mat);
+        MateriauxElevationArmes GetByName(string name);
     }
 }

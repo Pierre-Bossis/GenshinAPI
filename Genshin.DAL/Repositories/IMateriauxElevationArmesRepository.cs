@@ -10,5 +10,7 @@ namespace Genshin.DAL.Repositories
     public interface IMateriauxElevationArmesRepository
     {
         IEnumerable<MateriauxElevationArmes> GetAll();
+        void Create(MateriauxElevationArmes mat);
+        MateriauxElevationArmes GetByName(string name);
     }
 }
