@@ -1,9 +1,11 @@
 ﻿using Genshin.BLL.Interfaces;
 using Genshin.DAL.DataAccess;
 using GenshinAPI.Models;
+using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace GenshinAPI.Controllers
 {
@@ -40,30 +42,28 @@ namespace GenshinAPI.Controllers
             HttpRequest req = HttpContext.Request;
             var form = await Request.ReadFormAsync();
 
+            //remplir DTO
             ArmesFormDTO dto = new ArmesFormDTO()
             {
                 Nom = form["Nom"][0],
                 TypeArme = form["TypeArme"][0],
                 Description = form["Description"][0],
                 NomStatPrincipale = form["NomStatPrincipale"][0],
-                ValeurStatPrincipale = decimal.Parse(form["ValeurStatPrincipale"][0]),
                 EffetPassif = form["EffetPassif"][0],
                 ATQBase = int.Parse(form["ATQBase"][0]),
                 Rarete = int.Parse(form["Rarete"][0]),
             };
 
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                IFormFile file1 = Request.Form.Files[0];
-                IFormFile file2 = Request.Form.Files[1];
+            //gérer la reception de la valeur décimale
+            dto.ValeurStatPrincipale = DecimalConverter.DecimalConvert(form["ValeurStatPrincipale"][0]);
 
-                file1.CopyTo(memoryStream);
-                dto.Icone = memoryStream.ToArray();
+            //gérer la conversion des images en byte[]
+            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
+            dto.Image = ImageConverter.ImgConverter(Request.Form.Files[1]);
 
-                file2.CopyTo(memoryStream);
-                dto.Image = memoryStream.ToArray();
-            }
+            //envoyer le DTO finalisé
             _armesService.Create(dto.ToBLL());
+
             return Ok();
 
         }
