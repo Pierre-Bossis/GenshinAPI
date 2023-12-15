@@ -28,7 +28,7 @@ namespace Genshin.DAL.DataAccess
         public MateriauxElevationArmesEntity GetByName(string name)
         {
             string sql = "SELECT * FROM MateriauxElevationArmes WHERE Nom = @name";
-            MateriauxElevationArmesEntity? mat = _connection.QuerySingleOrDefault<MateriauxElevationArmesEntity>(sql, new { name = name });
+            MateriauxElevationArmesEntity? mat = _connection.QuerySingleOrDefault<MateriauxElevationArmesEntity?>(sql, new { name = name });
             if (mat is not null) return mat;
 
             return null;
@@ -39,7 +39,5 @@ namespace Genshin.DAL.DataAccess
             string sql = "SELECT * FROM MateriauxElevationArmes";
             return _connection.Query<MateriauxElevationArmesEntity>(sql);
         }
-
-        //traitement pour create
     }
 }

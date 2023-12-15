@@ -23,6 +23,12 @@ builder.Services.AddScoped<IArmesBLLService, ArmesBLLService>();
 builder.Services.AddScoped<IProduitsRepository,ProduitsService>();
 builder.Services.AddScoped<IProduitsBLLService,ProduitsBLLService>();
 
+builder.Services.AddScoped<IMateriauxAmeliorationPersonnagesRepository, MateriauxAmeliorationPersonnagesService>();
+builder.Services.AddScoped<IMateriauxAmeliorationPersonnagesBLLService,MateriauxAmeliorationPersonnagesBLLService>();
+
+builder.Services.AddScoped<IPersonnagesRepository, PersonnagesService>();
+builder.Services.AddScoped<IPersonnagesBLLService, PersonnagesBLLService>();
+
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
     options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
