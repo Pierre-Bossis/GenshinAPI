@@ -1,5 +1,6 @@
 ﻿using Genshin.DAL.Entities;
-using GenshinAPI.Models;
+using GenshinAPI.Models.Armes;
+using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 
 namespace GenshinAPI.Tools.Mappers.Armes
 {
@@ -40,6 +41,7 @@ namespace GenshinAPI.Tools.Mappers.Armes
             return null;
         }
         #endregion
+
         #region Armes
         public static ArmesEntity ToBLL(this ArmesFormDTO dto)
         {

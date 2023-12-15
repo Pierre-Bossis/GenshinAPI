@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace GenshinAPI.Models
+﻿namespace GenshinAPI.Models.Produits
 {
-    public class MateriauxElevationArmesFormDTO
+    public class ProduitsFormDTO
     {
-
         public string Nom { get; set; }
 
         public byte[] Icone { get; set; }

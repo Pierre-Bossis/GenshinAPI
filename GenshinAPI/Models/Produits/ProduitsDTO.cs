@@ -1,6 +1,6 @@
-﻿namespace GenshinAPI.Models
+﻿namespace GenshinAPI.Models.Produits
 {
-    public class MateriauxElevationArmesDTO
+    public class ProduitsDTO
     {
         public int Id { get; set; }
         public string Nom { get; set; }

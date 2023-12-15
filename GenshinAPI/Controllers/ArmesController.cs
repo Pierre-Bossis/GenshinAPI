@@ -1,6 +1,6 @@
 ﻿using Genshin.BLL.Interfaces;
 using Genshin.DAL.DataAccess;
-using GenshinAPI.Models;
+using GenshinAPI.Models.Armes;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
 using Microsoft.AspNetCore.Http;

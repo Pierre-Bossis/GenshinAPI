@@ -1,9 +1,10 @@
 ﻿using Genshin.BLL.Interfaces;
-using GenshinAPI.Models;
 using GenshinAPI.Tools.Mappers.Armes;
 using Microsoft.AspNetCore.Mvc;
 using static System.Net.Mime.MediaTypeNames;
 using System.Collections;
+using GenshinAPI.Tools;
+using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 
 namespace GenshinAPI.Controllers
 {
@@ -47,12 +48,8 @@ namespace GenshinAPI.Controllers
                 Rarete = int.Parse(form["Rarete"][0])
             };
 
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                IFormFile file = Request.Form.Files[0];
-                file.CopyTo(memoryStream);
-                dto.Icone = memoryStream.ToArray();
-            }
+            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
+
             _materiauxElevationArmesService.Create(dto.ToBLL());
             return Ok();
 

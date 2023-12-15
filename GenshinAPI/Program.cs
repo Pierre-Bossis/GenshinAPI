@@ -20,6 +20,9 @@ builder.Services.AddScoped<IMateriauxElevationArmesBLLService, MateriauxElevatio
 builder.Services.AddScoped<IArmesRepository, ArmesService>();
 builder.Services.AddScoped<IArmesBLLService, ArmesBLLService>();
 
+builder.Services.AddScoped<IProduitsRepository,ProduitsService>();
+builder.Services.AddScoped<IProduitsBLLService,ProduitsBLLService>();
+
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
     options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
