@@ -74,6 +74,7 @@ namespace GenshinAPI.Tools.Mappers.Armes
 
                 return new ArmesDTO
                 {
+                    Id = e.Id,
                     Nom = e.Nom,
                     TypeArme = e.TypeArme,
                     Description = e.Description,

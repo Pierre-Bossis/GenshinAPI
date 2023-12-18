@@ -6,7 +6,7 @@ CREATE TABLE [dbo].[Personnages]
   [TypeArme] VARCHAR(50) NOT NULL,
   [Lore] VARCHAR(MAX) NOT NULL,
   [Nationalite] VARCHAR(50) NOT NULL,
-  [Trailer_YT] VARCHAR(MAX) NOT NULL,
+  [TrailerYT] VARCHAR(MAX) NOT NULL,
   [SplashArt] VARBINARY(Max) NOT NULL,
   [Portrait] VARBINARY(Max) NOT NULL,
   [DateSortie] Datetime NOT NULL,

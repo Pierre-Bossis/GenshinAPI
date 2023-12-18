@@ -60,4 +60,3 @@ namespace GenshinAPI.Tools.Mappers.Personnages
         }
     }
 }
-}
