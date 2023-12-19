@@ -11,6 +11,7 @@ namespace Genshin.DAL.Repositories
     {
         IEnumerable<ProduitsEntity> GetAll();
         ProduitsEntity GetByName(string name);
+        ProduitsEntity GetById(int id);
         void Create(ProduitsEntity produit);
     }
 }

@@ -36,6 +36,15 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [HttpGet("nationalite/{nationalite}")]
+        public IActionResult GetByNationalite(string nationalite)
+        {
+            IEnumerable<PersonnagesDTO> personnages = _personnagesBLLService.GetByNationalite(nationalite).Select(perso => perso.ToDto());
+
+            if (personnages is not null) return Ok(personnages);
+            return BadRequest("rien trouvé");
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

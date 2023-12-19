@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Genshin.DAL.DataAccess
 {
@@ -38,6 +39,13 @@ namespace Genshin.DAL.DataAccess
         {
             string sql = "SELECT * FROM Armes WHERE Nom = @nom";
             ArmesEntity? arme = _connection.QuerySingleOrDefault<ArmesEntity>(sql, new {nom = name});
+            if (arme is not null) return arme;
+            return null;
+        }
+
+        public ArmesEntity GetById(int id){
+            string sql = "SELECT * FROM Armes WHERE Id = @id";
+            ArmesEntity? arme = _connection.QuerySingleOrDefault<ArmesEntity>(sql, new { id = id });
             if (arme is not null) return arme;
             return null;
         }

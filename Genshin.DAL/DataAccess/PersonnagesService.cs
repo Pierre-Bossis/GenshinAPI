@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Genshin.DAL.DataAccess
 {
@@ -41,6 +42,15 @@ namespace Genshin.DAL.DataAccess
         {
             string sql = "SELECT * FROM Personnages WHERE Nom = @nom";
             PersonnagesEntity? personnage = _connection.QuerySingleOrDefault<PersonnagesEntity?>(sql, new { nom = name });
+
+            if (personnage is not null) return personnage;
+            return null;
+        }
+
+        public IEnumerable<PersonnagesEntity> GetByNationalite(string nationalite)
+        {
+            string sql = "SELECT * FROM Personnages WHERE Nationalite = @nationalite";
+            IEnumerable<PersonnagesEntity?> personnage = _connection.Query<PersonnagesEntity?>(sql, new { nationalite = nationalite });
 
             if (personnage is not null) return personnage;
             return null;

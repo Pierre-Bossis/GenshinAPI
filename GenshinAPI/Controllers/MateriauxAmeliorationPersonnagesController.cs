@@ -36,6 +36,15 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int id)
+        {
+            MateriauxAmeliorationPersonnagesDTO mat = _materiauxAmeliorationPersonnagesService.GetById(id).ToDto();
+
+            if (mat is not null) return Ok(mat);
+            return BadRequest("Rien trouvé");
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

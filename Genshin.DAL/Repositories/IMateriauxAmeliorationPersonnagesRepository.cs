@@ -11,6 +11,7 @@ namespace Genshin.DAL.Repositories
     {
         IEnumerable<MateriauxAmeliorationPersonnagesEntity> GetAll();
         MateriauxAmeliorationPersonnagesEntity GetByName(string name);
+        MateriauxAmeliorationPersonnagesEntity GetById(int id);
         void Create(MateriauxAmeliorationPersonnagesEntity mat);
     }
 }

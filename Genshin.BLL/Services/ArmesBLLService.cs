@@ -33,5 +33,11 @@ namespace Genshin.BLL.Services
             ArmesEntity arme = _repo.GetByName(name);
             return arme;
         }
+
+        public ArmesEntity GetById(int id)
+        {
+            ArmesEntity arme = _repo.GetById(id);
+            return arme;
+        }
     }
 }

@@ -39,5 +39,14 @@ namespace Genshin.DAL.DataAccess
 
             return null;
         }
+
+        public MateriauxAmeliorationPersonnagesEntity GetById(int id)
+        {
+            string sql = "SELECT * FROM MateriauxAmeliorationPersonnages WHERE Id = @id";
+            MateriauxAmeliorationPersonnagesEntity? mat = _connection.QuerySingleOrDefault<MateriauxAmeliorationPersonnagesEntity?>(sql, new { id = id });
+            if (mat is not null) return mat;
+
+            return null;
+        }
     }
 }

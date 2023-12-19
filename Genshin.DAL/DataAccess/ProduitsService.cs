@@ -40,5 +40,12 @@ namespace Genshin.DAL.DataAccess
             if (produit is not null) return produit;
             return null;
         }
+        public ProduitsEntity GetById(int id)
+        {
+            string sql = "SELECT * FROM Produits WHERE Id = @id";
+            ProduitsEntity? produit = _connection.QuerySingleOrDefault<ProduitsEntity?>(sql, new { id = id });
+            if (produit is not null) return produit;
+            return null;
+        }
     }
 }

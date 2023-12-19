@@ -11,6 +11,7 @@ namespace Genshin.BLL.Interfaces
     {
         IEnumerable<MateriauxAmeliorationPersonnagesEntity> GetAll();
         MateriauxAmeliorationPersonnagesEntity GetByName(string name);
+        MateriauxAmeliorationPersonnagesEntity GetById(int id);
         void Create(MateriauxAmeliorationPersonnagesEntity mat);
     }
 }

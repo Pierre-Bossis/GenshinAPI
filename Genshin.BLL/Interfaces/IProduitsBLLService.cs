@@ -11,6 +11,7 @@ namespace Genshin.BLL.Interfaces
     {
         IEnumerable<ProduitsEntity> GetAll();
         ProduitsEntity GetByName(string name);
+        ProduitsEntity GetById(int id);
         void Create(ProduitsEntity produit);
     }
 }

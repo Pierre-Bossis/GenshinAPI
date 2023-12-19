@@ -36,6 +36,15 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int id)
+        {
+            ArmesDTO arme = _armesService.GetById(id).ToDto();
+
+            if (arme is not null) return Ok(arme);
+            return BadRequest("Rien trouvé");
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

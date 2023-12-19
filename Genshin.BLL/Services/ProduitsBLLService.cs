@@ -31,5 +31,10 @@ namespace Genshin.BLL.Services
         {
             return _repo.GetByName(name);
         }
+
+        public ProduitsEntity GetById(int id)
+        {
+            return _repo.GetById(id);
+        }
     }
 }

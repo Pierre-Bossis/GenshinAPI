@@ -35,5 +35,12 @@ namespace Genshin.BLL.Services
 
             return mat;
         }
+
+        public MateriauxAmeliorationPersonnagesEntity GetById(int id)
+        {
+            MateriauxAmeliorationPersonnagesEntity mat = _repo.GetById(id);
+
+            return mat;
+        }
     }
 }
