@@ -3,6 +3,7 @@ using Genshin.DAL.Entities;
 using Genshin.DAL.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -13,9 +14,9 @@ namespace Genshin.DAL.DataAccess
 {
     public class ArmesService : IArmesRepository
     {
-        private readonly SqlConnection _connection;
+        private readonly DbConnection _connection;
 
-        public ArmesService(SqlConnection connection)
+        public ArmesService(DbConnection connection)
         {
             _connection = connection;
         }

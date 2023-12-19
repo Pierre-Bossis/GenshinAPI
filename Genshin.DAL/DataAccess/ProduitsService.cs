@@ -13,9 +13,9 @@ namespace Genshin.DAL.DataAccess
 {
     public class ProduitsService : IProduitsRepository
     {
-        private readonly SqlConnection _connection;
+        private readonly DbConnection _connection;
 
-        public ProduitsService(SqlConnection connection)
+        public ProduitsService(DbConnection connection)
         {
             _connection = connection;
         }
