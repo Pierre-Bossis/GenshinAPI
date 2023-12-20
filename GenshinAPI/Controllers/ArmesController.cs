@@ -1,6 +1,8 @@
 ﻿using Genshin.BLL.Interfaces;
 using Genshin.DAL.DataAccess;
+using Genshin.DAL.Entities;
 using GenshinAPI.Models.Armes;
+using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +16,12 @@ namespace GenshinAPI.Controllers
     public class ArmesController : ControllerBase
     {
         private readonly IArmesBLLService _armesService;
+        private readonly IArmes_MateriauxElevationArmesBLLService _serv;
 
-        public ArmesController(IArmesBLLService armesService)
+        public ArmesController(IArmesBLLService armesService, IArmes_MateriauxElevationArmesBLLService serv)
         {
             _armesService = armesService;
+            _serv = serv;
         }
 
         [HttpGet]
@@ -30,9 +34,10 @@ namespace GenshinAPI.Controllers
         [HttpGet("{name}")]
         public IActionResult GetByName(string name)
         {
-            ArmesDTO arme = _armesService.GetByName(name).ToDto();
+            ArmesDTO? arme = _armesService.GetByName(name).ToDto();
+            IEnumerable<MateriauxElevationArmesDTO?> matsElevationArmes = GetMateriauxElevationArmes(arme.Id);
 
-            if (arme is not null) return Ok(arme);
+            if (arme is not null && matsElevationArmes is not null) return Ok(new {arme, matsElevationArmes });
             return BadRequest("Rien trouvé");
         }
 
@@ -40,8 +45,9 @@ namespace GenshinAPI.Controllers
         public IActionResult GetById(int id)
         {
             ArmesDTO arme = _armesService.GetById(id).ToDto();
+            IEnumerable<MateriauxElevationArmesDTO?> matsElevationArmes = GetMateriauxElevationArmes(arme.Id);
 
-            if (arme is not null) return Ok(arme);
+            if (arme is not null && matsElevationArmes is not null) return Ok(new { arme, matsElevationArmes });
             return BadRequest("Rien trouvé");
         }
 
@@ -75,6 +81,14 @@ namespace GenshinAPI.Controllers
 
             return Ok();
 
+        }
+
+
+
+        //Méthode privée appel liste materiaux elevation arme (GetByName et GetById)
+        private IEnumerable<MateriauxElevationArmesDTO> GetMateriauxElevationArmes(int armeid)
+        {
+           return _serv.GetMateriaux(armeid).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxElevationArmesDTO>(); ;
         }
 
     }
