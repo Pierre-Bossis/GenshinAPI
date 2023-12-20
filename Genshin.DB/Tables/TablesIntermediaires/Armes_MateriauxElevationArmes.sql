@@ -2,7 +2,7 @@ CREATE TABLE [dbo].[Armes_MateriauxElevationArmes]
 (
 	  [Arme_Id] INT NOT NULL,
     [MateriauxElevationArme_Id] INT NOT NULL,
-    [Quantite] INT NOT NULL
+    [Quantite] INT
 
     CONSTRAINT FK_ArmeIntermediaire FOREIGN KEY (Arme_Id) REFERENCES Armes(Id),
     CONSTRAINT FK_MaterielIntermediaire FOREIGN KEY (MateriauxElevationArme_Id) REFERENCES MateriauxElevationArmes(Id),

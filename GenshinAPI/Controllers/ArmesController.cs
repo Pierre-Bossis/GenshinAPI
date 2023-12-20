@@ -76,8 +76,12 @@ namespace GenshinAPI.Controllers
             dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
             dto.Image = ImageConverter.ImgConverter(Request.Form.Files[1]);
 
+            //gérer la reception de la liste d'id des materiaux elevation d'armes
+            var selectedMats = form["SelectedMats[]"];
+            List<int> selectedMatsList = selectedMats.Select(int.Parse).ToList();
+
             //envoyer le DTO finalisé
-            _armesService.Create(dto.ToBLL());
+            _armesService.Create(dto.ToBLL(), selectedMatsList);
 
             return Ok();
 
