@@ -1,7 +1,9 @@
 ﻿using Genshin.BLL.Interfaces;
 using Genshin.DAL.DataAccess;
 using GenshinAPI.Models.Armes;
+using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using GenshinAPI.Models.Personnages;
+using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Personnages;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +16,12 @@ namespace GenshinAPI.Controllers
     public class PersonnagesController : ControllerBase
     {
         private readonly IPersonnagesBLLService _personnagesBLLService;
+        private readonly IPersonnages_LivresAptitudeBLLService _getLivresService;
 
-        public PersonnagesController(IPersonnagesBLLService personnagesBLLService)
+        public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService)
         {
             _personnagesBLLService = personnagesBLLService;
+            _getLivresService = getLivresService;
         }
 
         [HttpGet]
@@ -31,8 +35,9 @@ namespace GenshinAPI.Controllers
         public IActionResult GetByName(string name)
         {
             PersonnagesDTO personnage = _personnagesBLLService.GetByName(name).ToDto();
+            IEnumerable<LivresAptitudeDTO?> livres = GetMateriauxElevationArmes(personnage.Id);
 
-            if (personnage is not null) return Ok(personnage);
+            if (personnage is not null && livres is not null) return Ok(new {personnage,livres});
             return BadRequest("Rien trouvé");
         }
 
@@ -61,18 +66,34 @@ namespace GenshinAPI.Controllers
                 TrailerYT = form["TrailerYT"][0],
                 DateSortie = DateTime.Parse(form["DateSortie"][0]),
                 Rarete = int.Parse(form["Rarete"][0]),
-                Arme_Id = int.Parse(form["Arme_Id"][0]),
                 MateriauxAmeliorationPersonnage_Id = int.Parse(form["MateriauxAmeliorationPersonnage_Id"]),
                 Produit_Id = int.Parse(form["Produit_Id"])
             };
 
+            //gérer le cas ou le personnage n'a pas d'arme signature
+            int parsedArmeId = 0;
+            if (int.TryParse(form["Arme_Id"][0], out parsedArmeId))
+            {
+                dto.Arme_Id = parsedArmeId;
+            }
+
             dto.Portrait = ImageConverter.ImgConverter(Request.Form.Files[0]);
             dto.SplashArt = ImageConverter.ImgConverter(Request.Form.Files[1]);
 
-            _personnagesBLLService.Create(dto.ToBLL());
+            //gérer la reception de la liste d'id des materiaux elevation d'armes
+            var selectedLivres = form["SelectedLivres[]"];
+            List<int> selectedLivresList = selectedLivres.Select(int.Parse).ToList();
+
+            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList);
 
             return Ok();
 
+        }
+
+        //Méthode privée appel liste materiaux elevation arme (GetByName et GetById)
+        private IEnumerable<LivresAptitudeDTO> GetMateriauxElevationArmes(int personnageId)
+        {
+            return _getLivresService.GetLivres(personnageId).Select(livre => livre.ToDto()) ?? Enumerable.Empty<LivresAptitudeDTO>(); ;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Genshin.BLL.Interfaces
     {
         IEnumerable<PersonnagesEntity> GetAll();
         PersonnagesEntity GetByName(string name);
-        void Create(PersonnagesEntity personnage);
+        void Create(PersonnagesEntity personnage, List<int>SelectedLivres);
         IEnumerable<PersonnagesEntity> GetByNationalite(string nationalite);
     }
 }

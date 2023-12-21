@@ -20,14 +20,21 @@ namespace Genshin.DAL.DataAccess
         {
             _connection = connection;
         }
-        public void Create(PersonnagesEntity p)
+        public void Create(PersonnagesEntity p, List<int> SelectedLivres)
         {
             string sql = "INSERT INTO Personnages VALUES " +
                 "(@nom,@oeildivin,@typearme,@lore,@nationalite,@traileryt,@splashart,@portrait," +
-                "@datesortie,@arme_id,@materiauxameliorationpersonnage_id,@produit_id,@rarete)";
-            _connection.ExecuteScalar(sql, new { nom = p.Nom, oeildivin = p.OeilDivin, typearme = p.TypeArme, lore = p.Lore, nationalite = p.Nationalite,
+                "@datesortie,@arme_id,@materiauxameliorationpersonnage_id,@produit_id,@rarete); SELECT SCOPE_IDENTITY();";
+            int newPersonnageId = _connection.ExecuteScalar<int>(sql, new { nom = p.Nom, oeildivin = p.OeilDivin, typearme = p.TypeArme, lore = p.Lore, nationalite = p.Nationalite,
             traileryt = p.TrailerYT, splashart = p.SplashArt, portrait = p.Portrait, datesortie = p.DateSortie, arme_id = p.Arme_Id,
             materiauxameliorationpersonnage_id = p.MateriauxAmeliorationPersonnage_Id, produit_id = p.Produit_Id, rarete = p.Rarete});
+
+            string sql2 = "INSERT INTO Personnages_LivresAptitude (Personnage_Id, LivreAptitude_Id,Quantite) VALUES (@personnageId, @livreId,0)";
+
+            foreach (int livreId in SelectedLivres)
+            {
+                _connection.Execute(sql2, new { personnageId = newPersonnageId, livreId });
+            }
         }
 
         public IEnumerable<PersonnagesEntity> GetAll()

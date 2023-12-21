@@ -21,21 +21,20 @@ namespace Genshin.DAL.DataAccess
         }
         public IEnumerable<ArmesEntity> GetArmes(int matId)
         {
-            string query = @" SELECT *
-                            FROM Armes AS A
-                            INNER JOIN Armes_MateriauxElevationArmes AS AME ON A.Id = AME.Arme_Id
-                            WHERE AME.MateriauxElevationArme_Id = @MatId"
-            ;
+            string query = "SELECT * " +
+                            "FROM Armes AS A " +
+                            "INNER JOIN Armes_MateriauxElevationArmes AS AME ON A.Id = AME.Arme_Id " +
+                            "WHERE AME.MateriauxElevationArme_Id = @MatId";
 
             return _connection.Query<ArmesEntity>(query, new { MatId = matId });
         }
 
         public IEnumerable<MateriauxElevationArmesEntity> GetMateriaux(int armeId)
         {
-            string query = @" SELECT *
-                            FROM MateriauxElevationArmes AS ME
-                            INNER JOIN Armes_MateriauxElevationArmes AS AME ON ME.Id = AME.MateriauxElevationArme_Id
-                            WHERE AME.Arme_Id = @ArmeId";
+            string query = "SELECT * " +
+                "FROM MateriauxElevationArmes AS ME " +
+                "INNER JOIN Armes_MateriauxElevationArmes AS AME ON ME.Id = AME.MateriauxElevationArme_Id " +
+                "WHERE AME.Arme_Id = @ArmeId";
 
             return _connection.Query<MateriauxElevationArmesEntity>(query, new { ArmeId = armeId });
         }

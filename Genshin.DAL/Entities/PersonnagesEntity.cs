@@ -20,7 +20,7 @@ namespace Genshin.DAL.Entities
         public byte[] Portrait { get; set; }
         public DateTime DateSortie { get; set; }
         public int Rarete { get; set; }
-        public int Arme_Id { get; set; }
+        public int? Arme_Id { get; set; }
         public int MateriauxAmeliorationPersonnage_Id { get; set; }
         public int Produit_Id { get; set; }
     }
