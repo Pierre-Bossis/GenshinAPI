@@ -4,6 +4,7 @@ using GenshinAPI.Models.Armes;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using GenshinAPI.Models.Personnages;
 using GenshinAPI.Models.Personnages.LivresAptitude;
+using GenshinAPI.Models.Personnages.MateriauxElevationPersonnages;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Personnages;
 using Microsoft.AspNetCore.Http;
@@ -17,11 +18,14 @@ namespace GenshinAPI.Controllers
     {
         private readonly IPersonnagesBLLService _personnagesBLLService;
         private readonly IPersonnages_LivresAptitudeBLLService _getLivresService;
+        private readonly IPersonnages_MateriauxElevationPersonnagesBLLService _getMatsElevationService;
 
-        public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService)
+        public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService,
+                                     IPersonnages_MateriauxElevationPersonnagesBLLService getMatsElevationService)
         {
             _personnagesBLLService = personnagesBLLService;
             _getLivresService = getLivresService;
+            _getMatsElevationService = getMatsElevationService;
         }
 
         [HttpGet]
@@ -35,9 +39,10 @@ namespace GenshinAPI.Controllers
         public IActionResult GetByName(string name)
         {
             PersonnagesDTO personnage = _personnagesBLLService.GetByName(name).ToDto();
-            IEnumerable<LivresAptitudeDTO?> livres = GetMateriauxElevationArmes(personnage.Id);
+            IEnumerable<LivresAptitudeDTO?> livres = GetLivresAptitude(personnage.Id);
+            IEnumerable<MateriauxElevationPersonnagesDTO?> matsElevation = GetMateriauxElevationPersos(personnage.Id);
 
-            if (personnage is not null && livres is not null) return Ok(new {personnage,livres});
+            if (personnage is not null) return Ok(new {personnage,livres,matsElevation});
             return BadRequest("Rien trouvé");
         }
 
@@ -80,20 +85,29 @@ namespace GenshinAPI.Controllers
             dto.Portrait = ImageConverter.ImgConverter(Request.Form.Files[0]);
             dto.SplashArt = ImageConverter.ImgConverter(Request.Form.Files[1]);
 
-            //gérer la reception de la liste d'id des materiaux elevation d'armes
+            //gérer la reception de la liste d'id des livres d'aptitude
             var selectedLivres = form["SelectedLivres[]"];
             List<int> selectedLivresList = selectedLivres.Select(int.Parse).ToList();
 
-            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList);
+            //gérer la reception de la liste d'id des materiaux elevation personnages
+            var selectedMatsElevationPersonnages = form["SelectedMatsElevation[]"];
+            List<int> selectedMatsElevPersosListe = selectedMatsElevationPersonnages.Select(int.Parse).ToList();
+
+            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList,selectedMatsElevPersosListe);
 
             return Ok();
 
         }
 
-        //Méthode privée appel liste materiaux elevation arme (GetByName et GetById)
-        private IEnumerable<LivresAptitudeDTO> GetMateriauxElevationArmes(int personnageId)
+        //Méthode privée appel liste livres d'aptitude
+        private IEnumerable<LivresAptitudeDTO> GetLivresAptitude(int personnageId)
         {
             return _getLivresService.GetLivres(personnageId).Select(livre => livre.ToDto()) ?? Enumerable.Empty<LivresAptitudeDTO>(); ;
+        }
+
+        private IEnumerable<MateriauxElevationPersonnagesDTO> GetMateriauxElevationPersos(int personnageId)
+        {
+            return _getMatsElevationService.GetMateriauxElevation(personnageId).Select(livre => livre.ToDto()) ?? Enumerable.Empty<MateriauxElevationPersonnagesDTO>(); ;
         }
     }
 }

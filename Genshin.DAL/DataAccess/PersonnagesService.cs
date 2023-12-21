@@ -20,7 +20,7 @@ namespace Genshin.DAL.DataAccess
         {
             _connection = connection;
         }
-        public void Create(PersonnagesEntity p, List<int> SelectedLivres)
+        public void Create(PersonnagesEntity p, List<int> SelectedLivres, List<int> selectedMatsElevationPersonnages)
         {
             string sql = "INSERT INTO Personnages VALUES " +
                 "(@nom,@oeildivin,@typearme,@lore,@nationalite,@traileryt,@splashart,@portrait," +
@@ -34,6 +34,13 @@ namespace Genshin.DAL.DataAccess
             foreach (int livreId in SelectedLivres)
             {
                 _connection.Execute(sql2, new { personnageId = newPersonnageId, livreId });
+            }
+
+            string sql3 = "INSERT INTO Personnages_MateriauxElevationPersonnages (Personnage_Id, MateriauxElevationPersonnage_Id,Quantite) VALUES (@personnageId, @matsId,0)";
+
+            foreach (int matsId in selectedMatsElevationPersonnages)
+            {
+                _connection.Execute(sql3, new { personnageId = newPersonnageId, matsId });
             }
         }
 

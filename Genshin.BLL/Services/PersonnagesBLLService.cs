@@ -17,9 +17,9 @@ namespace Genshin.BLL.Services
         {
             _repo = repo;
         }
-        public void Create(PersonnagesEntity personnage, List<int> SelectedLivres)
+        public void Create(PersonnagesEntity personnage, List<int> SelectedLivres, List<int> selectedMatsElevationPersonnages)
         {
-            _repo.Create(personnage, SelectedLivres);
+            _repo.Create(personnage, SelectedLivres, selectedMatsElevationPersonnages);
         }
 
         public IEnumerable<PersonnagesEntity> GetAll()
