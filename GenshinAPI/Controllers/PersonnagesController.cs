@@ -56,6 +56,18 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [HttpGet("{id:int}")]
+        public IActionResult GetById(int id)
+        {
+            PersonnagesDTO personnage = _personnagesBLLService.GetById(id).ToDto();
+            IEnumerable<LivresAptitudeDTO?> livres = GetLivresAptitude(personnage.Id);
+            IEnumerable<MateriauxElevationPersonnagesDTO> matsElevation = GetMateriauxElevationPersos(personnage.Id);
+            IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationPersosArmes(personnage.Id);
+
+            if (personnage is not null) return Ok(new { personnage, livres, matsElevation, matsAmelioPersosArmes });
+            return BadRequest("Rien trouvé");
+        }
+
         [HttpGet("nationalite/{nationalite}")]
         public IActionResult GetByNationalite(string nationalite)
         {

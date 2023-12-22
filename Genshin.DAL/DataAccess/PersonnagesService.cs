@@ -69,6 +69,15 @@ namespace Genshin.DAL.DataAccess
             return null;
         }
 
+        public PersonnagesEntity GetById(int id)
+        {
+            string sql = "SELECT * FROM Personnages WHERE Id = @id";
+            PersonnagesEntity? personnage = _connection.QuerySingleOrDefault<PersonnagesEntity?>(sql, new { id = id });
+
+            if (personnage is not null) return personnage;
+            return null;
+        }
+
         public IEnumerable<PersonnagesEntity> GetByNationalite(string nationalite)
         {
             string sql = "SELECT * FROM Personnages WHERE Nationalite = @nationalite";

@@ -33,6 +33,11 @@ namespace Genshin.BLL.Services
             PersonnagesEntity personnage = _repo.GetByName(name);
             return personnage;
         }
+        public PersonnagesEntity GetById(int id)
+        {
+            PersonnagesEntity personnage = _repo.GetById(id);
+            return personnage;
+        }
         public IEnumerable<PersonnagesEntity> GetByNationalite(string nationalite)
         {
            IEnumerable<PersonnagesEntity> personnages = _repo.GetByNationalite(nationalite);
