@@ -4,6 +4,7 @@ using GenshinAPI.Models.Armes;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using GenshinAPI.Models.MatsAmelioPersosArmes;
 using GenshinAPI.Models.Personnages;
+using GenshinAPI.Models.Personnages.Constellations;
 using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Models.Personnages.MateriauxElevationPersonnages;
 using GenshinAPI.Tools;
@@ -22,17 +23,20 @@ namespace GenshinAPI.Controllers
         private readonly IPersonnages_LivresAptitudeBLLService _getLivresService;
         private readonly IPersonnages_MateriauxElevationPersonnagesBLLService _getMatsElevationService;
         private readonly IPersonnages_MatsAmelioPersosArmesBLLService _getMatsAmelioPersosArmesService;
+        private readonly IConstellationsBLLService _constellationsService;
 
         public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService,
                                      IPersonnages_MateriauxElevationPersonnagesBLLService getMatsElevationService,
-                                     IPersonnages_MatsAmelioPersosArmesBLLService getMatsAmelioPersosArmesService)
+                                     IPersonnages_MatsAmelioPersosArmesBLLService getMatsAmelioPersosArmesService,
+                                     IConstellationsBLLService constellationsService)
         {
             _personnagesBLLService = personnagesBLLService;
             _getLivresService = getLivresService;
             _getMatsElevationService = getMatsElevationService;
             _getMatsAmelioPersosArmesService = getMatsAmelioPersosArmesService;
+            _constellationsService = constellationsService;
         }
-
+        #region Personnages
         [HttpGet]
         public IActionResult Get()
         {
@@ -48,7 +52,7 @@ namespace GenshinAPI.Controllers
             IEnumerable<MateriauxElevationPersonnagesDTO> matsElevation = GetMateriauxElevationPersos(personnage.Id);
             IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationPersosArmes(personnage.Id);
 
-            if (personnage is not null) return Ok(new {personnage,livres,matsElevation,matsAmelioPersosArmes});
+            if (personnage is not null) return Ok(new { personnage, livres, matsElevation, matsAmelioPersosArmes });
             return BadRequest("Rien trouvé");
         }
 
@@ -104,7 +108,7 @@ namespace GenshinAPI.Controllers
             List<int> selectedMatsAmelioListe = selectedMatsAmelio.Select(int.Parse).ToList();
 
 
-            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList,selectedMatsElevPersosListe, selectedMatsAmelioListe);
+            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList, selectedMatsElevPersosListe, selectedMatsAmelioListe);
 
             return Ok();
 
@@ -124,8 +128,42 @@ namespace GenshinAPI.Controllers
         //Méthode privée appel liste materiaux amelioration personnages/armes
         private IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> GetMateriauxAmeliorationPersosArmes(int personnageId)
         {
-            return _getMatsAmelioPersosArmesService.GetMateriauxAmelioration(personnageId).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxAmeliorationPersonnagesEtArmesDTO>(); ;
+            return _getMatsAmelioPersosArmesService.GetMateriauxAmelioration(personnageId).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxAmeliorationPersonnagesEtArmesDTO>();
         }
+        #endregion
+
+        #endregion
+
+        #region Constellations
+
+        [HttpGet("{id:int}/constellations")]
+        public IActionResult GetConstellations(int id)
+        {
+            IEnumerable<ConstellationsDTO?> constellations = _constellationsService.GetAll(id).Select(c => c.ToDto());
+
+            return Ok(constellations);
+        }
+
+        [HttpPost("create/constellation")]
+        public async Task<IActionResult> CreateConstellation()
+        {
+            HttpRequest req = HttpContext.Request;
+            var form = await Request.ReadFormAsync();
+
+            ConstellationsFormDTO dto = new ConstellationsFormDTO()
+            {
+                Nom = form["Nom"][0],
+                Description = form["Description"][0],
+                Personnage_Id = int.Parse(form["Personnage_Id"])
+            };
+
+            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
+
+            _constellationsService.Create(dto.ToBLL());
+
+            return Ok();
+        }
+
         #endregion
     }
 }
