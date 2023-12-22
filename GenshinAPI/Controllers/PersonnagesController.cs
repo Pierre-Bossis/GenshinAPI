@@ -2,10 +2,12 @@
 using Genshin.DAL.DataAccess;
 using GenshinAPI.Models.Armes;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
+using GenshinAPI.Models.MatsAmelioPersosArmes;
 using GenshinAPI.Models.Personnages;
 using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Models.Personnages.MateriauxElevationPersonnages;
 using GenshinAPI.Tools;
+using GenshinAPI.Tools.Mappers.MatsAmelioPersosArmes;
 using GenshinAPI.Tools.Mappers.Personnages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +21,16 @@ namespace GenshinAPI.Controllers
         private readonly IPersonnagesBLLService _personnagesBLLService;
         private readonly IPersonnages_LivresAptitudeBLLService _getLivresService;
         private readonly IPersonnages_MateriauxElevationPersonnagesBLLService _getMatsElevationService;
+        private readonly IPersonnages_MatsAmelioPersosArmesBLLService _getMatsAmelioPersosArmesService;
 
         public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService,
-                                     IPersonnages_MateriauxElevationPersonnagesBLLService getMatsElevationService)
+                                     IPersonnages_MateriauxElevationPersonnagesBLLService getMatsElevationService,
+                                     IPersonnages_MatsAmelioPersosArmesBLLService getMatsAmelioPersosArmesService)
         {
             _personnagesBLLService = personnagesBLLService;
             _getLivresService = getLivresService;
             _getMatsElevationService = getMatsElevationService;
+            _getMatsAmelioPersosArmesService = getMatsAmelioPersosArmesService;
         }
 
         [HttpGet]
@@ -40,9 +45,10 @@ namespace GenshinAPI.Controllers
         {
             PersonnagesDTO personnage = _personnagesBLLService.GetByName(name).ToDto();
             IEnumerable<LivresAptitudeDTO?> livres = GetLivresAptitude(personnage.Id);
-            IEnumerable<MateriauxElevationPersonnagesDTO?> matsElevation = GetMateriauxElevationPersos(personnage.Id);
+            IEnumerable<MateriauxElevationPersonnagesDTO> matsElevation = GetMateriauxElevationPersos(personnage.Id);
+            IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationPersosArmes(personnage.Id);
 
-            if (personnage is not null) return Ok(new {personnage,livres,matsElevation});
+            if (personnage is not null) return Ok(new {personnage,livres,matsElevation,matsAmelioPersosArmes});
             return BadRequest("Rien trouvé");
         }
 
@@ -93,21 +99,33 @@ namespace GenshinAPI.Controllers
             var selectedMatsElevationPersonnages = form["SelectedMatsElevation[]"];
             List<int> selectedMatsElevPersosListe = selectedMatsElevationPersonnages.Select(int.Parse).ToList();
 
-            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList,selectedMatsElevPersosListe);
+            //gérer la reception de la liste d'id des materiaux amelioration personnages et armes
+            var selectedMatsAmelio = form["SelectedMatsAmelioPersosArmes[]"];
+            List<int> selectedMatsAmelioListe = selectedMatsAmelio.Select(int.Parse).ToList();
+
+
+            _personnagesBLLService.Create(dto.ToBLL(), selectedLivresList,selectedMatsElevPersosListe, selectedMatsAmelioListe);
 
             return Ok();
 
         }
 
+        #region Private Methods
         //Méthode privée appel liste livres d'aptitude
         private IEnumerable<LivresAptitudeDTO> GetLivresAptitude(int personnageId)
         {
             return _getLivresService.GetLivres(personnageId).Select(livre => livre.ToDto()) ?? Enumerable.Empty<LivresAptitudeDTO>(); ;
         }
-
+        //Méthode privée appel liste materiaux elevation
         private IEnumerable<MateriauxElevationPersonnagesDTO> GetMateriauxElevationPersos(int personnageId)
         {
-            return _getMatsElevationService.GetMateriauxElevation(personnageId).Select(livre => livre.ToDto()) ?? Enumerable.Empty<MateriauxElevationPersonnagesDTO>(); ;
+            return _getMatsElevationService.GetMateriauxElevation(personnageId).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxElevationPersonnagesDTO>(); ;
         }
+        //Méthode privée appel liste materiaux amelioration personnages/armes
+        private IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> GetMateriauxAmeliorationPersosArmes(int personnageId)
+        {
+            return _getMatsAmelioPersosArmesService.GetMateriauxAmelioration(personnageId).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxAmeliorationPersonnagesEtArmesDTO>(); ;
+        }
+        #endregion
     }
 }

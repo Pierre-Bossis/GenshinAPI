@@ -12,6 +12,6 @@ namespace Genshin.DAL.Repositories
         IEnumerable<PersonnagesEntity> GetAll();
         PersonnagesEntity GetByName(string name);
         IEnumerable<PersonnagesEntity> GetByNationalite(string nationalite);
-        void Create(PersonnagesEntity p, List<int> SelectedLivres, List<int> selectedMatsElevationPersonnages);
+        void Create(PersonnagesEntity p, List<int> SelectedLivres, List<int> selectedMatsElevationPersonnages, List<int> selectedMatsAmelioListe);
     }
 }
