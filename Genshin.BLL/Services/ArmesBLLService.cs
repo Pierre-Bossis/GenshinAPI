@@ -17,9 +17,9 @@ namespace Genshin.BLL.Services
         {
             _repo = repo;
         }
-        public void Create(ArmesEntity arme, List<int> selectedMats)
+        public void Create(ArmesEntity arme, List<int> selectedMats, List<int> selectedMatsAmelioList)
         {
-            _repo.Create(arme,selectedMats);
+            _repo.Create(arme,selectedMats, selectedMatsAmelioList);
         }
 
         public IEnumerable<ArmesEntity> GetAll()

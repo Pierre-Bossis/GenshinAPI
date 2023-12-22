@@ -3,8 +3,10 @@ using Genshin.DAL.DataAccess;
 using Genshin.DAL.Entities;
 using GenshinAPI.Models.Armes;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
+using GenshinAPI.Models.MatsAmelioPersosArmes;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
+using GenshinAPI.Tools.Mappers.MatsAmelioPersosArmes;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -16,12 +18,14 @@ namespace GenshinAPI.Controllers
     public class ArmesController : ControllerBase
     {
         private readonly IArmesBLLService _armesService;
-        private readonly IArmes_MateriauxElevationArmesBLLService _serv;
+        private readonly IArmes_MateriauxElevationArmesBLLService _matsElevationService;
+        private readonly IArmes_MatsAmelioPersosArmesBLLService _matsAmelioService;
 
-        public ArmesController(IArmesBLLService armesService, IArmes_MateriauxElevationArmesBLLService serv)
+        public ArmesController(IArmesBLLService armesService, IArmes_MateriauxElevationArmesBLLService matsElevationService, IArmes_MatsAmelioPersosArmesBLLService matsAmelioService)
         {
             _armesService = armesService;
-            _serv = serv;
+            _matsElevationService = matsElevationService;
+            _matsAmelioService = matsAmelioService;
         }
 
         [HttpGet]
@@ -36,8 +40,9 @@ namespace GenshinAPI.Controllers
         {
             ArmesDTO? arme = _armesService.GetByName(name).ToDto();
             IEnumerable<MateriauxElevationArmesDTO?> matsElevationArmes = GetMateriauxElevationArmes(arme.Id);
+            IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationsArmes(arme.Id);
 
-            if (arme is not null && matsElevationArmes is not null) return Ok(new {arme, matsElevationArmes });
+            if (arme is not null) return Ok(new {arme, matsElevationArmes, matsAmelioPersosArmes });
             return BadRequest("Rien trouvé");
         }
 
@@ -45,9 +50,10 @@ namespace GenshinAPI.Controllers
         public IActionResult GetById(int id)
         {
             ArmesDTO arme = _armesService.GetById(id).ToDto();
-            IEnumerable<MateriauxElevationArmesDTO?> matsElevationArmes = GetMateriauxElevationArmes(arme.Id);
+            IEnumerable<MateriauxElevationArmesDTO> matsElevationArmes = GetMateriauxElevationArmes(arme.Id);
+            IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationsArmes(arme.Id);
 
-            if (arme is not null && matsElevationArmes is not null) return Ok(new { arme, matsElevationArmes });
+            if (arme is not null) return Ok(new { arme, matsElevationArmes, matsAmelioPersosArmes });
             return BadRequest("Rien trouvé");
         }
 
@@ -80,20 +86,29 @@ namespace GenshinAPI.Controllers
             var selectedMats = form["SelectedMats[]"];
             List<int> selectedMatsList = selectedMats.Select(int.Parse).ToList();
 
+            var selectedMatsAmelio = form["selectedMatsAmelio[]"];
+            var selectedMatsAmelioList = selectedMatsAmelio.Select(int.Parse).ToList();
+
             //envoyer le DTO finalisé
-            _armesService.Create(dto.ToBLL(), selectedMatsList);
+            _armesService.Create(dto.ToBLL(), selectedMatsList, selectedMatsAmelioList);
 
             return Ok();
 
         }
 
 
-
+        #region Private Methods
         //Méthode privée appel liste materiaux elevation arme (GetByName et GetById)
         private IEnumerable<MateriauxElevationArmesDTO> GetMateriauxElevationArmes(int armeid)
         {
-           return _serv.GetMateriaux(armeid).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxElevationArmesDTO>(); ;
+           return _matsElevationService.GetMateriaux(armeid).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxElevationArmesDTO>(); ;
         }
+        //Méthode privée appel liste materiaux Amelioration Personnages et Armes (GetByName et GetById)
+        private IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> GetMateriauxAmeliorationsArmes(int armeid)
+        {
+            return _matsAmelioService.GetMateriaux(armeid).Select(mat => mat.ToDto()) ?? Enumerable.Empty<MateriauxAmeliorationPersonnagesEtArmesDTO>(); ;
+        }
+        #endregion
 
     }
 }

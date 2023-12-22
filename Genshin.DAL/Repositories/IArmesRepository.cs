@@ -12,6 +12,6 @@ namespace Genshin.DAL.Repositories
         IEnumerable<ArmesEntity> GetAll();
         ArmesEntity GetByName(string name);
         ArmesEntity GetById(int id);
-        void Create(ArmesEntity arme, List<int> selectedMats);
+        void Create(ArmesEntity arme, List<int> selectedMats, List<int> selectedMatsAmelioList);
     }
 }

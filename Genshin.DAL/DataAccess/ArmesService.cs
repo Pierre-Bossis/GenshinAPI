@@ -20,7 +20,7 @@ namespace Genshin.DAL.DataAccess
         {
             _connection = connection;
         }
-        public void Create(ArmesEntity arme, List<int> selectedMats)
+        public void Create(ArmesEntity arme, List<int> selectedMats, List<int> selectedMatsAmelioList)
         {
             string sql = "INSERT INTO Armes VALUES (@nom,@typeArme,@description,@icone,@image,@nomStat,@valeurStat,@effetPassif,@ATQBase,@rarete); SELECT SCOPE_IDENTITY();";
             int newArmeId = _connection.ExecuteScalar<int>(sql, new { nom = arme.Nom,typeArme = arme.TypeArme, description = arme.Description, icone = arme.Icone,
@@ -32,6 +32,13 @@ namespace Genshin.DAL.DataAccess
             foreach (int matId in selectedMats)
             {
                 _connection.Execute(sql2, new { armeId = newArmeId, matId });
+            }
+
+            string sql3 = "INSERT INTO Armes_MateriauxAmeliorationPersonnagesEtArmes VALUES (@armeId, @matId,0)";
+
+            foreach (int matId in selectedMatsAmelioList)
+            {
+                _connection.Execute(sql3, new { armeId = newArmeId, matId });
             }
         }
 

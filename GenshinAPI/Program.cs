@@ -49,8 +49,11 @@ builder.Services.AddScoped<IPersonnages_MateriauxElevationPersonnagesBLLService,
 builder.Services.AddScoped<IMateriauxAmeliorationPersonnagesEtArmesRepository, MateriauxAmeliorationPersonnagesEtArmesService>();
 builder.Services.AddScoped<IMateriauxAmeliorationPersonnagesEtArmesBLLService, MateriauxAmeliorationPersonnagesEtArmesBLLService>();
 
-builder.Services.AddScoped<IPersonnages_MatsAmelioPersosArmesRepository, IPersonnages_MatsAmelioPersosArmesService>();
+builder.Services.AddScoped<IPersonnages_MatsAmelioPersosArmesRepository, Personnages_MatsAmelioPersosArmesService>();
 builder.Services.AddScoped<IPersonnages_MatsAmelioPersosArmesBLLService, Personnages_MatsAmelioPersosArmesBLLService>();
+
+builder.Services.AddScoped<IArmes_MatsAmelioPersosArmesRepository, Armes_MatsAmelioPersosArmesService>();
+builder.Services.AddScoped<IArmes_MatsAmelioPersosArmesBLLService, Armes_MatsAmelioPersosArmesBLLService>();
 
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
     options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));

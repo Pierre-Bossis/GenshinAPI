@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Genshin.DAL.DataAccess
 {
-    public class IPersonnages_MatsAmelioPersosArmesService : IPersonnages_MatsAmelioPersosArmesRepository
+    public class Personnages_MatsAmelioPersosArmesService : IPersonnages_MatsAmelioPersosArmesRepository
     {
         private readonly DbConnection _connection;
 
-        public IPersonnages_MatsAmelioPersosArmesService(DbConnection connection)
+        public Personnages_MatsAmelioPersosArmesService(DbConnection connection)
         {
             _connection = connection;
         }
