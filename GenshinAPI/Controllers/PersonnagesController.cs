@@ -4,6 +4,7 @@ using GenshinAPI.Models.Armes;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using GenshinAPI.Models.MatsAmelioPersosArmes;
 using GenshinAPI.Models.Personnages;
+using GenshinAPI.Models.Personnages.Aptitudes;
 using GenshinAPI.Models.Personnages.Constellations;
 using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Models.Personnages.MateriauxElevationPersonnages;
@@ -24,17 +25,20 @@ namespace GenshinAPI.Controllers
         private readonly IPersonnages_MateriauxElevationPersonnagesBLLService _getMatsElevationService;
         private readonly IPersonnages_MatsAmelioPersosArmesBLLService _getMatsAmelioPersosArmesService;
         private readonly IConstellationsBLLService _constellationsService;
+        private readonly IAptitudesBLLService _aptitudesService;
 
         public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService,
                                      IPersonnages_MateriauxElevationPersonnagesBLLService getMatsElevationService,
                                      IPersonnages_MatsAmelioPersosArmesBLLService getMatsAmelioPersosArmesService,
-                                     IConstellationsBLLService constellationsService)
+                                     IConstellationsBLLService constellationsService,
+                                     IAptitudesBLLService aptitudesService)
         {
             _personnagesBLLService = personnagesBLLService;
             _getLivresService = getLivresService;
             _getMatsElevationService = getMatsElevationService;
             _getMatsAmelioPersosArmesService = getMatsAmelioPersosArmesService;
             _constellationsService = constellationsService;
+            _aptitudesService = aptitudesService;
         }
         #region Personnages
         [HttpGet]
@@ -176,6 +180,37 @@ namespace GenshinAPI.Controllers
             return Ok();
         }
 
+        #endregion
+
+        #region Aptitudes
+        [HttpGet("{id:int}/aptitudes")]
+        public IActionResult GetAptitudes(int id)
+        {
+            IEnumerable<AptitudesDTO?> aptitudes = _aptitudesService.GetAll(id).Select(c => c.ToDto());
+
+            return Ok(aptitudes);
+        }
+
+        [HttpPost("create/aptitude")]
+        public async Task<IActionResult> CreateAptitude()
+        {
+            HttpRequest req = HttpContext.Request;
+            var form = await Request.ReadFormAsync();
+
+            AptitudesFormDTO dto = new AptitudesFormDTO()
+            {
+                Nom = form["Nom"][0],
+                Description = form["Description"][0],
+                IsAptitudeCombat = bool.Parse(form["IsAptitudeCombat"][0]),
+                Personnage_Id = int.Parse(form["Personnage_Id"])
+            };
+
+            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
+
+            _aptitudesService.Create(dto.ToBLL());
+
+            return Ok();
+        }
         #endregion
     }
 }
