@@ -61,6 +61,9 @@ builder.Services.AddScoped<IConstellationsBLLService, ConstellationsBLLService>(
 builder.Services.AddScoped<IAptitudesRepository, AptitudesService>();
 builder.Services.AddScoped<IAptitudesBLLService, AptitudesBLLService>();
 
+builder.Services.AddScoped<IUserRepository,UserService>();
+builder.Services.AddScoped<IUserBLLService, UserBLLService>();
+
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
     options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
