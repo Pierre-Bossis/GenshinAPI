@@ -2,6 +2,7 @@
 using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Personnages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenshinAPI.Controllers
@@ -42,6 +43,7 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

@@ -1,7 +1,7 @@
 ﻿using Genshin.BLL.Interfaces;
-using Genshin.DAL.Entities;
 using GenshinAPI.Models.User;
-using Microsoft.AspNetCore.Http;
+using GenshinAPI.Tools;
+using GenshinAPI.Tools.Mappers.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenshinAPI.Controllers
@@ -11,10 +11,12 @@ namespace GenshinAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserBLLService _userService;
+        private readonly JwtGenerator _jwtGenerator;
 
-        public AuthController(IUserBLLService userService)
+        public AuthController(IUserBLLService userService, JwtGenerator jwtGenerator)
         {
             _userService = userService;
+            _jwtGenerator = jwtGenerator;
         }
 
         [HttpPost("register")]
@@ -37,13 +39,13 @@ namespace GenshinAPI.Controllers
             }
             try
             {
-                UserEntity connectedUser = _userService.Login(dto.Email, dto.MotDePasse);
-                //string token = _jwtGenerator.Generate(connectedUser);
-                return Ok(connectedUser);
+                ConnectedUserDTO connectedUser = _userService.Login(dto.Email, dto.MotDePasse).ToDto();
+                string token = _jwtGenerator.Generate(connectedUser);
+                return Ok(token);
             }
-            catch (InvalidOperationException ex)
+            catch
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Email ou mot de passe incorrect.");
             }
         }
     }

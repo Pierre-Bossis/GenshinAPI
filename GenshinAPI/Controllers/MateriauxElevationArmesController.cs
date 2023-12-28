@@ -5,6 +5,7 @@ using static System.Net.Mime.MediaTypeNames;
 using System.Collections;
 using GenshinAPI.Tools;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GenshinAPI.Controllers
 {
@@ -35,6 +36,7 @@ namespace GenshinAPI.Controllers
            return BadRequest("Rien trouvé");
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

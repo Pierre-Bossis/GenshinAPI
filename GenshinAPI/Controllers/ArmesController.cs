@@ -7,6 +7,7 @@ using GenshinAPI.Models.MatsAmelioPersosArmes;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
 using GenshinAPI.Tools.Mappers.MatsAmelioPersosArmes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
@@ -57,6 +58,7 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

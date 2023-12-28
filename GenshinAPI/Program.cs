@@ -2,19 +2,23 @@ using Genshin.BLL.Interfaces;
 using Genshin.BLL.Services;
 using Genshin.DAL.DataAccess;
 using Genshin.DAL.Repositories;
+using GenshinAPI.Tools;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Injections
+
+builder.Services.AddScoped<JwtGenerator>();
 builder.Services.AddTransient<DbConnection>(sp => new SqlConnection(configuration.GetConnectionString("techno")));
 builder.Services.AddScoped<IMateriauxElevationArmesRepository, MateriauxElevationArmesService>();
 builder.Services.AddScoped<IMateriauxElevationArmesBLLService, MateriauxElevationArmesBLLService>();
@@ -64,12 +68,37 @@ builder.Services.AddScoped<IAptitudesBLLService, AptitudesBLLService>();
 builder.Services.AddScoped<IUserRepository,UserService>();
 builder.Services.AddScoped<IUserBLLService, UserBLLService>();
 
+#endregion
+
+#region Authentification
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration.GetSection("tokenInfo").GetSection("secretKey").Value)),
+            ValidateLifetime = true,
+            ValidateIssuer = false,
+            ValidAudience = "http://localhost:4200"
+        };
+    }
+    );
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("adminPolicy", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("connectedPolicy", policy => policy.RequireAuthenticatedUser()); 
+});
+
+#endregion
+
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
     options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseSwagger();
@@ -79,6 +108,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("angular");
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

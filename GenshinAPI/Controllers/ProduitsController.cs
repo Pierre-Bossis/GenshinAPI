@@ -3,6 +3,7 @@ using GenshinAPI.Models.Produits;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
 using GenshinAPI.Tools.Mappers.Produits;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenshinAPI.Controllers
@@ -43,6 +44,7 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

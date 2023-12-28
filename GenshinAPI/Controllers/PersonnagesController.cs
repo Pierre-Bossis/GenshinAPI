@@ -11,6 +11,7 @@ using GenshinAPI.Models.Personnages.MateriauxElevationPersonnages;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.MatsAmelioPersosArmes;
 using GenshinAPI.Tools.Mappers.Personnages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -81,6 +82,7 @@ namespace GenshinAPI.Controllers
             return BadRequest("rien trouvé");
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {
@@ -160,6 +162,7 @@ namespace GenshinAPI.Controllers
             return Ok(constellations);
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create/constellation")]
         public async Task<IActionResult> CreateConstellation()
         {
@@ -191,6 +194,7 @@ namespace GenshinAPI.Controllers
             return Ok(aptitudes);
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create/aptitude")]
         public async Task<IActionResult> CreateAptitude()
         {

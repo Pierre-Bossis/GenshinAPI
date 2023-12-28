@@ -4,6 +4,7 @@ using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using GenshinAPI.Models.Personnages.MateriauxAmeliorationPersonnages;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Personnages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -45,6 +46,7 @@ namespace GenshinAPI.Controllers
             return BadRequest("Rien trouvé");
         }
 
+        [Authorize("adminPolicy")]
         [HttpPost("create")]
         public async Task<IActionResult> Create()
         {

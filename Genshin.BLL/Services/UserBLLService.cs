@@ -20,7 +20,7 @@ namespace Genshin.BLL.Services
             {
                 return _repo.Login(email);
             }
-            throw new InvalidOperationException("Mot de passe incorrect");
+            throw new InvalidOperationException("Email ou mot de passe incorrect");
         }
 
         public void Register(string username, string motDePasse, string email)
