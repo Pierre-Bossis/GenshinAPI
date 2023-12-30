@@ -35,6 +35,9 @@ builder.Services.AddScoped<IMateriauxAmeliorationPersonnagesBLLService,Materiaux
 builder.Services.AddScoped<IPersonnagesRepository, PersonnagesService>();
 builder.Services.AddScoped<IPersonnagesBLLService, PersonnagesBLLService>();
 
+builder.Services.AddScoped<IAvatarsRepository, AvatarsService>();
+builder.Services.AddScoped<IAvatarsBLLService, AvatarsBLLService>();
+
 builder.Services.AddScoped<IMateriauxElevationPersonnagesRepository, MateriauxElevationPersonnagesService>();
 builder.Services.AddScoped<IMateriauxElevationPersonnagesBLLService, MateriauxElevationPersonnagesBLLService>();
 
