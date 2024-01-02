@@ -53,11 +53,14 @@ namespace GenshinAPI.Controllers
         public IActionResult GetByName(string name)
         {
             PersonnagesDTO personnage = _personnagesBLLService.GetByName(name).ToDto();
-            IEnumerable<LivresAptitudeDTO?> livres = GetLivresAptitude(personnage.Id);
-            IEnumerable<MateriauxElevationPersonnagesDTO> matsElevation = GetMateriauxElevationPersos(personnage.Id);
-            IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationPersosArmes(personnage.Id);
+            if (personnage is not null)
+            {
+                IEnumerable<LivresAptitudeDTO?> livres = GetLivresAptitude(personnage.Id);
+                IEnumerable<MateriauxElevationPersonnagesDTO> matsElevation = GetMateriauxElevationPersos(personnage.Id);
+                IEnumerable<MateriauxAmeliorationPersonnagesEtArmesDTO> matsAmelioPersosArmes = GetMateriauxAmeliorationPersosArmes(personnage.Id);
 
-            if (personnage is not null) return Ok(new { personnage, livres, matsElevation, matsAmelioPersosArmes });
+                return Ok(new { personnage, livres, matsElevation, matsAmelioPersosArmes });
+            }
             return BadRequest("Rien trouvé");
         }
 

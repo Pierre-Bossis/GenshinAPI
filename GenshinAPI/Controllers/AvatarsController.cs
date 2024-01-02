@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GenshinAPI.Controllers
 {
-    [Authorize("connectedPolicy")]
+    //[Authorize("connectedPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class AvatarsController : ControllerBase
