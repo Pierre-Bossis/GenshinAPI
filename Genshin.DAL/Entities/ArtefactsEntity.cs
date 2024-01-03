@@ -15,6 +15,7 @@ namespace Genshin.DAL.Entities
         public string Bonus2Pieces { get; set; }
         public string Bonus4Pieces { get; set; }
         public string ImagePath { get; set; }
+        public string Source { get; set; }
 
     }
 }

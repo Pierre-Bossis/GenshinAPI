@@ -6,5 +6,6 @@
 	[Type] VARCHAR(50) NOT NULL,
 	[Bonus2Pieces] VARCHAR(MAX) NOT NULL,
 	[Bonus4Pieces] VARCHAR(MAX) NOT NULL,
-	[ImagePath] VARCHAR(MAX) NOT NULL
+	[ImagePath] VARCHAR(MAX) NOT NULL,
+	[Source] VARCHAR(MAX) NOT NULL
 )

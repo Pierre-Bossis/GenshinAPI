@@ -20,8 +20,8 @@ namespace Genshin.DAL.DataAccess
         }
         public void create(ArtefactsEntity a)
         {
-            string sql = "INSERT INTO Artefacts VALUES(@nom,@nomset,@type,@bonus2pieces,@bonus4pieces,@imagepath)";
-            _connection.Execute(sql, new { nom = a.Nom, nomset = a.NomSet, type = a.Type, bonus2pieces = a.Bonus2Pieces, bonus4pieces = a.Bonus4Pieces, imagepath = a.ImagePath });
+            string sql = "INSERT INTO Artefacts VALUES(@nom,@nomset,@type,@bonus2pieces,@bonus4pieces,@imagepath,@source)";
+            _connection.Execute(sql, new { nom = a.Nom, nomset = a.NomSet, type = a.Type, bonus2pieces = a.Bonus2Pieces, bonus4pieces = a.Bonus4Pieces, imagepath = a.ImagePath, source = a.Source });
         }
 
         public IEnumerable<ArtefactsEntity> GetAll()

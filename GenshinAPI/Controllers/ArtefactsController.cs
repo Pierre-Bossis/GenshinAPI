@@ -2,6 +2,7 @@
 using GenshinAPI.Models.Artefacts;
 using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Tools.Mappers.Artefacts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,14 +26,15 @@ namespace GenshinAPI.Controllers
             return Ok(artefacts);
         }
 
-        [HttpGet]
+        [HttpGet("{nomSet}")]
         public IActionResult GetBySet(string nomSet)
         {
             IEnumerable<ArtefactsDTO> artefacts = _artefactsService.GetBySet(nomSet).Select(a => a.ToDto());
             return Ok(artefacts);
         }
 
-        [HttpPost]
+        [Authorize("adminPolicy")]
+        [HttpPost("create")]
         public async Task<IActionResult> Create()
         {
             HttpRequest req = HttpContext.Request;
@@ -58,9 +60,10 @@ namespace GenshinAPI.Controllers
                 Nom = form["Nom"][0],
                 NomSet = form["NomSet"][0],
                 Type = form["Type"][0],
-                Bonus2Pieces = form["Bonus4Pieces"][0],
+                Bonus2Pieces = form["Bonus2Pieces"][0],
                 Bonus4Pieces = form["Bonus4Pieces"][0],
                 ImagePath = filePath,
+                Source = form["Source"][0]
             };
 
 

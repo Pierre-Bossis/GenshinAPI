@@ -19,6 +19,7 @@ namespace GenshinAPI.Tools.Mappers.Artefacts
                     Bonus2Pieces = dto.Bonus2Pieces,
                     Bonus4Pieces = dto.Bonus4Pieces,
                     ImagePath = dto.ImagePath,
+                    Source = dto.Source
                 };
             }
             return null;
@@ -45,6 +46,7 @@ namespace GenshinAPI.Tools.Mappers.Artefacts
                     Bonus2Pieces = e.Bonus2Pieces,
                     Bonus4Pieces = e.Bonus4Pieces,
                     ImagePath = base64String,
+                    Source = e.Source
                 };
             }
             return null;
