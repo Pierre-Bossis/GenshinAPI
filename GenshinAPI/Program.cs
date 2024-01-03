@@ -71,6 +71,9 @@ builder.Services.AddScoped<IAptitudesBLLService, AptitudesBLLService>();
 builder.Services.AddScoped<IUserRepository,UserService>();
 builder.Services.AddScoped<IUserBLLService, UserBLLService>();
 
+builder.Services.AddScoped<IArtefactsRepository, ArtefactsService>();
+builder.Services.AddScoped<IArtefactsBLLService, ArtefactsBLLService>();
+
 #endregion
 
 #region Authentification

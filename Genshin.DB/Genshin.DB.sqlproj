@@ -78,6 +78,7 @@
     <Build Include="Tables\TablesIntermediaires\Personnages_MateriauxElevationPersonnages.sql" />
     <Build Include="Tables\Constellations.sql" />
     <Build Include="Tables\Aptitudes.sql" />
+    <Build Include="Tables\Artefacts.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Genshin.DB.publish.xml" />
