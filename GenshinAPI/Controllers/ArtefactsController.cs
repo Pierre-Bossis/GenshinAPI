@@ -5,6 +5,7 @@ using GenshinAPI.Tools.Mappers.Artefacts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace GenshinAPI.Controllers
 {
@@ -13,10 +14,12 @@ namespace GenshinAPI.Controllers
     public class ArtefactsController : ControllerBase
     {
         private readonly IArtefactsBLLService _artefactsService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public ArtefactsController(IArtefactsBLLService artefactsService)
+        public ArtefactsController(IArtefactsBLLService artefactsService, IWebHostEnvironment hostingEnvironment)
         {
             _artefactsService = artefactsService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -43,18 +46,24 @@ namespace GenshinAPI.Controllers
             Guid newName = Guid.NewGuid();
             string fileName = newName.ToString() + form.Files[0].FileName;
 
-            //Creer le dossier de réception si inéxistant
-            if (!Directory.Exists("Artefacts")) Directory.CreateDirectory("Artefacts");
+            string uploadsFolder = "Assets/Artefacts";
+            string relativeUploadsPath = Path.Combine(uploadsFolder, fileName);
 
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Artefacts/", fileName);
+            string absoluteUploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, relativeUploadsPath);
 
-            string path = Directory.GetCurrentDirectory() + "Artefacts/" + fileName;
+            if (!Directory.Exists(Path.GetDirectoryName(absoluteUploadsPath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(absoluteUploadsPath));
+            }
 
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
+            using (FileStream fs = new FileStream(absoluteUploadsPath, FileMode.Create))
             {
                 await form.Files[0].CopyToAsync(fs);
-                //return this.StatusCode(200, "https://localhost:44375/upload/" + fileName);
             }
+
+            // Obtention du chemin relatif à partir du chemin absolu
+            string relativePath = Path.Combine("", relativeUploadsPath).Replace('\\', '/'); // Chemin relatif avec des slashs
+
             ArtefactsFormDTO dto = new ArtefactsFormDTO()
             {
                 Nom = form["Nom"][0],
@@ -62,10 +71,9 @@ namespace GenshinAPI.Controllers
                 Type = form["Type"][0],
                 Bonus2Pieces = form["Bonus2Pieces"][0],
                 Bonus4Pieces = form["Bonus4Pieces"][0],
-                ImagePath = filePath,
+                ImagePath = relativePath, // Utilisation du chemin relatif
                 Source = form["Source"][0]
             };
-
 
             _artefactsService.create(dto.ToBLL());
             return Ok();
