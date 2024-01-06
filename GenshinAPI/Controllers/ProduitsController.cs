@@ -4,6 +4,7 @@ using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Armes;
 using GenshinAPI.Tools.Mappers.Produits;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenshinAPI.Controllers
@@ -13,10 +14,12 @@ namespace GenshinAPI.Controllers
     public class ProduitsController : ControllerBase
     {
         private readonly IProduitsBLLService _produitsService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public ProduitsController(IProduitsBLLService produitsService)
+        public ProduitsController(IProduitsBLLService produitsService, IWebHostEnvironment hostingEnvironment)
         {
             _produitsService = produitsService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -45,22 +48,13 @@ namespace GenshinAPI.Controllers
         }
 
         [Authorize("adminPolicy")]
+        [Consumes("multipart/form-data")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromForm] ProduitsFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone,"Produits",_hostingEnvironment);
 
-            ProduitsFormDTO dto = new ProduitsFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Source = form["Source"][0],
-                Rarete = int.Parse(form["Rarete"][0])
-            };
-
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _produitsService.Create(dto.ToBLL());
+            _produitsService.Create(dto.ToBLL(relativePath));
             return Ok();
 
         }

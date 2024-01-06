@@ -7,7 +7,7 @@
         public string Type { get; set; }
         public string Bonus2Pieces { get; set; }
         public string Bonus4Pieces { get; set; }
-        public string ImagePath { get; set; }
+        public IFormFile Icone { get; set; }
         public string Source { get; set; }
     }
 }

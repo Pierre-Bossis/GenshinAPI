@@ -44,7 +44,7 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
-    options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()));
+    options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("Content-Disposition")));
 
 var app = builder.Build();
 

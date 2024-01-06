@@ -6,7 +6,7 @@ namespace GenshinAPI.Tools.Mappers.Artefacts
 {
     public static class ArtefactsMapper
     {
-        public static ArtefactsEntity ToBLL(this ArtefactsFormDTO dto)
+        public static ArtefactsEntity ToBLL(this ArtefactsFormDTO dto, string relativePath)
         {
             if (dto is not null)
             {
@@ -18,7 +18,7 @@ namespace GenshinAPI.Tools.Mappers.Artefacts
                     Type = dto.Type,
                     Bonus2Pieces = dto.Bonus2Pieces,
                     Bonus4Pieces = dto.Bonus4Pieces,
-                    ImagePath = dto.ImagePath,
+                    ImagePath = relativePath,
                     Source = dto.Source
                 };
             }

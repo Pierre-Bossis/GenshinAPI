@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Genshin.BLL\Genshin.BLL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Assets\Produits\" />
+  </ItemGroup>
+
 </Project>
