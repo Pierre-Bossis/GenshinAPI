@@ -48,7 +48,6 @@ namespace GenshinAPI.Controllers
         }
 
         [Authorize("adminPolicy")]
-        [Consumes("multipart/form-data")]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] ProduitsFormDTO dto)
         {
