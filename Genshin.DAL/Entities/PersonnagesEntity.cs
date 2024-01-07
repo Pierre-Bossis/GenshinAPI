@@ -16,8 +16,8 @@ namespace Genshin.DAL.Entities
         public string Lore { get; set; }
         public string Nationalite { get; set; }
         public string TrailerYT { get; set; }
-        public byte[] SplashArt { get; set; }
-        public byte[] Portrait { get; set; }
+        public string SplashArt { get; set; }
+        public string Portrait { get; set; }
         public DateTime DateSortie { get; set; }
         public int Rarete { get; set; }
         public int? Arme_Id { get; set; }

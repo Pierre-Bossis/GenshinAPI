@@ -12,7 +12,7 @@ namespace Genshin.DAL.Entities
         public string Nom { get; set; }
         public string Description { get; set; }
         public bool IsAptitudeCombat { get; set; }
-        public byte[] Icone { get; set; }
+        public string Icone { get; set; }
         public int Personnage_Id { get; set; }
     }
 }

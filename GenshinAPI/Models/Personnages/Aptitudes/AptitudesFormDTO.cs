@@ -12,7 +12,7 @@ namespace GenshinAPI.Models.Personnages.Aptitudes
         [Required]
         public bool IsAptitudeCombat { get; set; }
         [Required]
-        public byte[] Icone { get; set; }
+        public IFormFile Icone { get; set; }
         [Required]
         public int Personnage_Id { get; set; }
     }

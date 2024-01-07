@@ -18,9 +18,9 @@ namespace GenshinAPI.Models.Personnages
         [Required]
         public string TrailerYT { get; set; }
         [Required]
-        public byte[] SplashArt { get; set; }
+        public IFormFile SplashArt { get; set; }
         [Required]
-        public byte[] Portrait { get; set; }
+        public IFormFile Portrait { get; set; }
         [Required]
         public DateTime DateSortie { get; set; }
         [Required]

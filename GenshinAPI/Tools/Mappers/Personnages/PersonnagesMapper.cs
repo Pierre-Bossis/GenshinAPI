@@ -6,7 +6,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
 {
     public static class PersonnagesMapper
     {
-        public static PersonnagesEntity ToBLL(this PersonnagesFormDTO dto)
+        public static PersonnagesEntity ToBLL(this PersonnagesFormDTO dto, string relativePathPortrait, string relativePathSplashArt)
         {
             if (dto is not null)
             {
@@ -20,8 +20,8 @@ namespace GenshinAPI.Tools.Mappers.Personnages
                     DateSortie = dto.DateSortie,
                     TrailerYT = dto.TrailerYT,
                     Lore = dto.Lore,
-                    Portrait = dto.Portrait,
-                    SplashArt = dto.SplashArt,
+                    Portrait = relativePathPortrait,
+                    SplashArt = relativePathSplashArt,
                     Arme_Id = dto.Arme_Id,
                     Produit_Id = dto.Produit_Id,
                     MateriauxAmeliorationPersonnage_Id = dto.MateriauxAmeliorationPersonnage_Id,
@@ -35,8 +35,21 @@ namespace GenshinAPI.Tools.Mappers.Personnages
         {
             if (e is not null)
             {
-                string base64Portrait = Convert.ToBase64String(e.Portrait);
-                string base64SplashArt = Convert.ToBase64String(e.SplashArt);
+                string base64Portrait = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Portrait) && File.Exists(e.Portrait))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Portrait);
+                    base64Portrait = Convert.ToBase64String(imageBytes);
+                }
+
+                string base64SplashArt = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.SplashArt) && File.Exists(e.SplashArt))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.SplashArt);
+                    base64SplashArt = Convert.ToBase64String(imageBytes);
+                }
 
                 return new PersonnagesDTO
                 {

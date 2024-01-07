@@ -6,7 +6,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
 {
     public static class AptitudesMapper
     {
-        public static AptitudesEntity ToBLL(this AptitudesFormDTO dto)
+        public static AptitudesEntity ToBLL(this AptitudesFormDTO dto, string relativePath)
         {
             if (dto is not null)
             {
@@ -16,7 +16,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
                     Nom = dto.Nom,
                     Description = dto.Description,
                     IsAptitudeCombat = dto.IsAptitudeCombat,
-                    Icone = dto.Icone,
+                    Icone = relativePath,
                     Personnage_Id = dto.Personnage_Id
                 };
             }
@@ -27,7 +27,13 @@ namespace GenshinAPI.Tools.Mappers.Personnages
         {
             if (e is not null)
             {
-                string base64String = Convert.ToBase64String(e.Icone);
+                string base64String = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Icone) && File.Exists(e.Icone))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Icone);
+                    base64String = Convert.ToBase64String(imageBytes);
+                }
 
                 return new AptitudesDTO
                 {

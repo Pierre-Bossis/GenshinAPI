@@ -192,23 +192,13 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create/aptitude")]
-        public async Task<IActionResult> CreateAptitude()
+        public async Task<IActionResult> CreateAptitude([FromForm] AptitudesFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            PersonnagesDTO perso = _personnagesBLLService.GetById(dto.Personnage_Id).ToDto();
 
-            AptitudesFormDTO dto = new AptitudesFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Description = form["Description"][0],
-                IsAptitudeCombat = bool.Parse(form["IsAptitudeCombat"][0]),
-                Personnage_Id = int.Parse(form["Personnage_Id"])
-            };
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone, "Personnages/" + perso.Nom + "/Aptitudes", _hostingEnvironment);
 
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _aptitudesService.Create(dto.ToBLL());
-
+            _aptitudesService.Create(dto.ToBLL(relativePath));
             return Ok();
         }
         #endregion
