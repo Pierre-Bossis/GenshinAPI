@@ -12,9 +12,9 @@ namespace GenshinAPI.Models.Armes
         [Required]
         public string Description { get; set; }
         [Required]
-        public byte[] Icone { get; set; }
+        public IFormFile Icone { get; set; }
         [Required]
-        public byte[] Image { get; set; }
+        public IFormFile Image { get; set; }
         [Required]
         public string NomStatPrincipale { get; set; }
         [Required]
@@ -27,5 +27,9 @@ namespace GenshinAPI.Models.Armes
         public int ATQBase { get; set; }
         [Required]
         public int Rarete { get; set; }
+
+        public List<int> SelectedMats { get; set; }
+        public List<int> selectedMatsAmelio { get; set; }
+
     }
 }

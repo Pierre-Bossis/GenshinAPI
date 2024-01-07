@@ -10,6 +10,7 @@ using GenshinAPI.Tools.Mappers.MatsAmelioPersosArmes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting.Internal;
 using System.Globalization;
 
 namespace GenshinAPI.Controllers
@@ -21,12 +22,15 @@ namespace GenshinAPI.Controllers
         private readonly IArmesBLLService _armesService;
         private readonly IArmes_MateriauxElevationArmesBLLService _matsElevationService;
         private readonly IArmes_MatsAmelioPersosArmesBLLService _matsAmelioService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public ArmesController(IArmesBLLService armesService, IArmes_MateriauxElevationArmesBLLService matsElevationService, IArmes_MatsAmelioPersosArmesBLLService matsAmelioService)
+        public ArmesController(IArmesBLLService armesService, IArmes_MateriauxElevationArmesBLLService matsElevationService, IArmes_MatsAmelioPersosArmesBLLService matsAmelioService,
+                               IWebHostEnvironment hostingEnvironment)
         {
             _armesService = armesService;
             _matsElevationService = matsElevationService;
             _matsAmelioService = matsAmelioService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -63,39 +67,16 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromForm] ArmesFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
-
-            //remplir DTO
-            ArmesFormDTO dto = new ArmesFormDTO()
-            {
-                Nom = form["Nom"][0],
-                TypeArme = form["TypeArme"][0],
-                Description = form["Description"][0],
-                NomStatPrincipale = form["NomStatPrincipale"][0],
-                EffetPassif = form["EffetPassif"][0],
-                ATQBase = int.Parse(form["ATQBase"][0]),
-                Rarete = int.Parse(form["Rarete"][0]),
-            };
+            string relativePathIcone = await ImageConverter.SaveIcone(dto.Icone, "Armes/Icones", _hostingEnvironment);
+            string relativePathImage = await ImageConverter.SaveIcone(dto.Image, "Armes/Images", _hostingEnvironment);
 
             //gérer la reception de la valeur décimale
-            dto.ValeurStatPrincipale = DecimalConverter.DecimalConvert(form["ValeurStatPrincipale"][0]);
-
-            //gérer la conversion des images en byte[]
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-            dto.Image = ImageConverter.ImgConverter(Request.Form.Files[1]);
-
-            //gérer la reception de la liste d'id des materiaux elevation d'armes
-            var selectedMats = form["SelectedMats[]"];
-            List<int> selectedMatsList = selectedMats.Select(int.Parse).ToList();
-
-            var selectedMatsAmelio = form["selectedMatsAmelio[]"];
-            var selectedMatsAmelioList = selectedMatsAmelio.Select(int.Parse).ToList();
+            //dto.ValeurStatPrincipale = DecimalConverter.DecimalConvert(dto.ValeurStatPrincipale);
 
             //envoyer le DTO finalisé
-            _armesService.Create(dto.ToBLL(), selectedMatsList, selectedMatsAmelioList);
+            _armesService.Create(dto.ToBLL(relativePathIcone, relativePathImage), dto.SelectedMats, dto.selectedMatsAmelio);
 
             return Ok();
 

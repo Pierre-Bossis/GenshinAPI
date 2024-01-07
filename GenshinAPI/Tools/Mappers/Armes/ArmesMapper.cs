@@ -1,6 +1,7 @@
 ﻿using Genshin.DAL.Entities;
 using GenshinAPI.Models.Armes;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
+using System.Runtime.CompilerServices;
 
 namespace GenshinAPI.Tools.Mappers.Armes
 {
@@ -49,7 +50,7 @@ namespace GenshinAPI.Tools.Mappers.Armes
         #endregion
 
         #region Armes
-        public static ArmesEntity ToBLL(this ArmesFormDTO dto)
+        public static ArmesEntity ToBLL(this ArmesFormDTO dto, string relativePathIcone,string relativePathImage)
         {
             if (dto is not null)
             {
@@ -59,8 +60,8 @@ namespace GenshinAPI.Tools.Mappers.Armes
                     Nom = dto.Nom,
                     TypeArme = dto.TypeArme,
                     Description = dto.Description,
-                    Icone = dto.Icone,
-                    Image = dto.Image,
+                    Icone = relativePathIcone,
+                    Image = relativePathImage,
                     NomStatPrincipale = dto.NomStatPrincipale,
                     ValeurStatPrincipale = dto.ValeurStatPrincipale,
                     EffetPassif = dto.EffetPassif,
@@ -75,8 +76,21 @@ namespace GenshinAPI.Tools.Mappers.Armes
         {
             if (e is not null)
             {
-                string base64Icone = Convert.ToBase64String(e.Icone);
-                string base64Image = Convert.ToBase64String(e.Image);
+                string base64Icone = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Icone) && File.Exists(e.Icone))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Icone);
+                    base64Icone = Convert.ToBase64String(imageBytes);
+                }
+
+                string base64Image = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Image) && File.Exists(e.Image))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Image);
+                    base64Image = Convert.ToBase64String(imageBytes);
+                }
 
                 return new ArmesDTO
                 {
