@@ -15,10 +15,12 @@ namespace GenshinAPI.Controllers
     public class MateriauxElevationPersonnagesController : ControllerBase
     {
         private readonly IMateriauxElevationPersonnagesBLLService _service;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public MateriauxElevationPersonnagesController(IMateriauxElevationPersonnagesBLLService service)
+        public MateriauxElevationPersonnagesController(IMateriauxElevationPersonnagesBLLService service, IWebHostEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
 
@@ -49,22 +51,12 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromForm] MateriauxElevationPersonnagesFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone, "MateriauxElevationPersonnages", _hostingEnvironment);
 
-            MateriauxElevationPersonnagesFormDTO dto = new MateriauxElevationPersonnagesFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Source = form["Source"][0],
-                Rarete = int.Parse(form["Rarete"][0])
-            };
-
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _service.Create(dto.ToBLL());
-            return Ok();
+            _service.Create(dto.ToBLL(relativePath));
+            return Ok();    
 
         }
     }

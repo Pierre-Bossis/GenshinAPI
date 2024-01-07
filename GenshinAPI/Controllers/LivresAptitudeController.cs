@@ -1,4 +1,5 @@
 ﻿using Genshin.BLL.Interfaces;
+using Genshin.DAL.DataAccess;
 using GenshinAPI.Models.Personnages.LivresAptitude;
 using GenshinAPI.Tools;
 using GenshinAPI.Tools.Mappers.Personnages;
@@ -12,10 +13,12 @@ namespace GenshinAPI.Controllers
     public class LivresAptitudeController : ControllerBase
     {
         private readonly ILivresAptitudeBLLService _service;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public LivresAptitudeController(ILivresAptitudeBLLService service)
+        public LivresAptitudeController(ILivresAptitudeBLLService service, IWebHostEnvironment hostingEnvironment)
         {
             _service = service;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -45,23 +48,12 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromForm] LivresAptitudeFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone, "LivresAptitude", _hostingEnvironment);
 
-            LivresAptitudeFormDTO dto = new LivresAptitudeFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Source = form["Source"][0],
-                Rarete = int.Parse(form["Rarete"][0])
-            };
-
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _service.Create(dto.ToBLL());
+            _service.Create(dto.ToBLL(relativePath));
             return Ok();
-
         }
     }
 }

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\LivresAptitude\" />
     <Folder Include="Assets\Produits\" />
   </ItemGroup>
 

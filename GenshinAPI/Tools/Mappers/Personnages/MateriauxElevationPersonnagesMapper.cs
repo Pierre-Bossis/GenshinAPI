@@ -6,7 +6,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
 {
     public static class MateriauxElevationPersonnagesMapper
     {
-        public static MateriauxElevationPersonnagesEntity ToBLL(this MateriauxElevationPersonnagesFormDTO dto)
+        public static MateriauxElevationPersonnagesEntity ToBLL(this MateriauxElevationPersonnagesFormDTO dto, string relativePath)
         {
             if (dto is not null)
             {
@@ -14,7 +14,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
                 return new MateriauxElevationPersonnagesEntity
                 {
                     Nom = dto.Nom,
-                    Icone = dto.Icone,
+                    Icone = relativePath,
                     Source = dto.Source,
                     Rarete = dto.Rarete
                 };
@@ -26,7 +26,13 @@ namespace GenshinAPI.Tools.Mappers.Personnages
         {
             if (e is not null)
             {
-                string base64String = Convert.ToBase64String(e.Icone);
+                string base64String = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Icone) && File.Exists(e.Icone))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Icone);
+                    base64String = Convert.ToBase64String(imageBytes);
+                }
 
                 return new MateriauxElevationPersonnagesDTO
                 {
