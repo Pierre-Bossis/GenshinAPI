@@ -21,6 +21,7 @@
   <ItemGroup>
     <Folder Include="Assets\LivresAptitude\" />
     <Folder Include="Assets\MateriauxElevationArmes\" />
+    <Folder Include="Assets\MateriauxAmeliorationPersonnagesEtArmes\" />
     <Folder Include="Assets\Produits\" />
   </ItemGroup>
 

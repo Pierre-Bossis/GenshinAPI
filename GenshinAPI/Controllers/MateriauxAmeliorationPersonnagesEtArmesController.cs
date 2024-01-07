@@ -15,10 +15,12 @@ namespace GenshinAPI.Controllers
     public class MateriauxAmeliorationPersonnagesEtArmesController : ControllerBase
     {
         private readonly IMateriauxAmeliorationPersonnagesEtArmesBLLService _serv;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public MateriauxAmeliorationPersonnagesEtArmesController(IMateriauxAmeliorationPersonnagesEtArmesBLLService serv)
+        public MateriauxAmeliorationPersonnagesEtArmesController(IMateriauxAmeliorationPersonnagesEtArmesBLLService serv, IWebHostEnvironment hostingEnvironment)
         {
             _serv = serv;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -48,21 +50,11 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromForm] MateriauxAmeliorationPersonnagesEtArmesFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone, "MateriauxAmeliorationPersonnagesEtArmes", _hostingEnvironment);
 
-            MateriauxAmeliorationPersonnagesEtArmesFormDTO dto = new MateriauxAmeliorationPersonnagesEtArmesFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Source = form["Source"][0],
-                Rarete = int.Parse(form["Rarete"][0])
-            };
-
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _serv.Create(dto.ToBLL());
+            _serv.Create(dto.ToBLL(relativePath));
             return Ok();
 
         }
