@@ -27,11 +27,12 @@ namespace GenshinAPI.Controllers
         private readonly IPersonnages_MatsAmelioPersosArmesBLLService _getMatsAmelioPersosArmesService;
         private readonly IConstellationsBLLService _constellationsService;
         private readonly IAptitudesBLLService _aptitudesService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public PersonnagesController(IPersonnagesBLLService personnagesBLLService, IPersonnages_LivresAptitudeBLLService getLivresService,
                                      IPersonnages_MateriauxElevationPersonnagesBLLService getMatsElevationService,
                                      IPersonnages_MatsAmelioPersosArmesBLLService getMatsAmelioPersosArmesService,
-                                     IConstellationsBLLService constellationsService,
+                                     IConstellationsBLLService constellationsService, IWebHostEnvironment hostingEnvironment,
                                      IAptitudesBLLService aptitudesService)
         {
             _personnagesBLLService = personnagesBLLService;
@@ -40,6 +41,7 @@ namespace GenshinAPI.Controllers
             _getMatsAmelioPersosArmesService = getMatsAmelioPersosArmesService;
             _constellationsService = constellationsService;
             _aptitudesService = aptitudesService;
+            _hostingEnvironment = hostingEnvironment;
         }
         #region Personnages
         [HttpGet]
@@ -167,22 +169,13 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create/constellation")]
-        public async Task<IActionResult> CreateConstellation()
+        public async Task<IActionResult> CreateConstellation([FromForm] ConstellationsFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            PersonnagesDTO perso = _personnagesBLLService.GetById(dto.Personnage_Id).ToDto();
 
-            ConstellationsFormDTO dto = new ConstellationsFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Description = form["Description"][0],
-                Personnage_Id = int.Parse(form["Personnage_Id"])
-            };
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone, "Personnages/"+perso.Nom+"/Constellations", _hostingEnvironment);
 
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _constellationsService.Create(dto.ToBLL());
-
+            _constellationsService.Create(dto.ToBLL(relativePath));
             return Ok();
         }
 

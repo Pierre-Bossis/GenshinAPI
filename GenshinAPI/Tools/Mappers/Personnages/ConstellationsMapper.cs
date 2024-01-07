@@ -6,7 +6,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
 {
     public static class ConstellationsMapper
     {
-        public static ConstellationsEntity ToBLL(this ConstellationsFormDTO dto)
+        public static ConstellationsEntity ToBLL(this ConstellationsFormDTO dto, string relativePath)
         {
             if (dto is not null)
             {
@@ -15,7 +15,7 @@ namespace GenshinAPI.Tools.Mappers.Personnages
                 {
                     Nom = dto.Nom,
                     Description = dto.Description,
-                    Icone = dto.Icone,
+                    Icone = relativePath,
                     Personnage_Id = dto.Personnage_Id
                 };
             }
@@ -26,7 +26,13 @@ namespace GenshinAPI.Tools.Mappers.Personnages
         {
             if (e is not null)
             {
-                string base64String = Convert.ToBase64String(e.Icone);
+                string base64String = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Icone) && File.Exists(e.Icone))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Icone);
+                    base64String = Convert.ToBase64String(imageBytes);
+                }
 
                 return new ConstellationsDTO
                 {

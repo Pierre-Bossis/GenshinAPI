@@ -23,6 +23,15 @@
     <Folder Include="Assets\LivresAptitude\" />
     <Folder Include="Assets\MateriauxElevationArmes\" />
     <Folder Include="Assets\MateriauxAmeliorationPersonnagesEtArmes\" />
+    <Folder Include="Assets\Personnages\Diluc\Constellations\" />
+    <Folder Include="Assets\Personnages\Furina\Constellations\" />
+    <Folder Include="Assets\Personnages\Ganyu\Constellations\" />
+    <Folder Include="Assets\Personnages\Jean\Constellations\" />
+    <Folder Include="Assets\Personnages\Keqing\Constellations\" />
+    <Folder Include="Assets\Personnages\Nahida\Constellations\" />
+    <Folder Include="Assets\Personnages\Navia\Constellations\" />
+    <Folder Include="Assets\Personnages\Xiao\Constellations\" />
+    <Folder Include="Assets\Personnages\Zhongli\Constellations\" />
     <Folder Include="Assets\Produits\" />
   </ItemGroup>
 

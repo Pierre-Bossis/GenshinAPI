@@ -10,7 +10,7 @@ namespace GenshinAPI.Models.Personnages.Constellations
         [Required]
         public string Description { get; set; }
         [Required]
-        public byte[] Icone { get; set; }
+        public IFormFile Icone { get; set; }
         [Required]
         public int Personnage_Id { get; set; }
     }
