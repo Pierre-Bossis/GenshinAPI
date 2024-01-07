@@ -6,6 +6,7 @@ using System.Collections;
 using GenshinAPI.Tools;
 using GenshinAPI.Models.Armes.MateriauxElevationArmes;
 using Microsoft.AspNetCore.Authorization;
+using Genshin.DAL.DataAccess;
 
 namespace GenshinAPI.Controllers
 {
@@ -14,10 +15,12 @@ namespace GenshinAPI.Controllers
     public class MateriauxElevationArmesController : ControllerBase
     {
         private readonly IMateriauxElevationArmesBLLService _materiauxElevationArmesService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public MateriauxElevationArmesController(IMateriauxElevationArmesBLLService MateriauxElevationArmesService)
+        public MateriauxElevationArmesController(IMateriauxElevationArmesBLLService MateriauxElevationArmesService, IWebHostEnvironment hostingEnvironment)
         {
             _materiauxElevationArmesService = MateriauxElevationArmesService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [HttpGet]
@@ -38,21 +41,11 @@ namespace GenshinAPI.Controllers
 
         [Authorize("adminPolicy")]
         [HttpPost("create")]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create([FromForm] MateriauxElevationArmesFormDTO dto)
         {
-            HttpRequest req = HttpContext.Request;
-            var form = await Request.ReadFormAsync();
+            string relativePath = await ImageConverter.SaveIcone(dto.Icone, "MateriauxElevationArmes", _hostingEnvironment);
 
-            MateriauxElevationArmesFormDTO dto = new MateriauxElevationArmesFormDTO()
-            {
-                Nom = form["Nom"][0],
-                Source = form["Source"][0],
-                Rarete = int.Parse(form["Rarete"][0])
-            };
-
-            dto.Icone = ImageConverter.ImgConverter(Request.Form.Files[0]);
-
-            _materiauxElevationArmesService.Create(dto.ToBLL());
+            _materiauxElevationArmesService.Create(dto.ToBLL(relativePath));
             return Ok();
 
         }
