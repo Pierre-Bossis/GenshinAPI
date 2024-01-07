@@ -18,9 +18,9 @@ namespace GenshinAPI.Models.Personnages
         [Required]
         public string TrailerYT { get; set; }
         [Required]
-        public IFormFile SplashArt { get; set; }
+        public IFormFile Image { get; set; }
         [Required]
-        public IFormFile Portrait { get; set; }
+        public IFormFile Icone { get; set; }
         [Required]
         public DateTime DateSortie { get; set; }
         [Required]
@@ -30,5 +30,9 @@ namespace GenshinAPI.Models.Personnages
         public int MateriauxAmeliorationPersonnage_Id { get; set; }
         [Required]
         public int Produit_Id { get; set; }
+
+        public List<int> SelectedLivres { get; set; }
+        public List<int> SelectedMatsElevation { get; set; }
+        public List<int> SelectedMatsAmelioPersosArmes { get; set; }
     }
 }
