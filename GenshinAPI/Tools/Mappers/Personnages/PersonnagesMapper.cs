@@ -71,5 +71,32 @@ namespace GenshinAPI.Tools.Mappers.Personnages
             }
             return null;
         }
+
+        public static PersonnagesListDTO ToDtoList(this PersonnagesEntity e)
+        {
+            if (e is not null)
+            {
+                string base64Portrait = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Portrait) && File.Exists(e.Portrait))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Portrait);
+                    base64Portrait = Convert.ToBase64String(imageBytes);
+                }
+
+                return new PersonnagesListDTO
+                {
+                    Id = e.Id,
+                    Nom = e.Nom,
+                    TypeArme = e.TypeArme,
+                    Nationalite = e.Nationalite,
+                    OeilDivin = e.OeilDivin,
+                    DateSortie = e.DateSortie,
+                    Portrait = base64Portrait,
+                    Rarete = e.Rarete
+                };
+            }
+            return null;
+        }
     }
 }

@@ -47,7 +47,7 @@ namespace GenshinAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<PersonnagesDTO> personnages = _personnagesBLLService.GetAll().Select(perso => perso.ToDto());
+            IEnumerable<PersonnagesListDTO> personnages = _personnagesBLLService.GetAll().Select(perso => perso.ToDtoList());
             return Ok(personnages);
         }
 

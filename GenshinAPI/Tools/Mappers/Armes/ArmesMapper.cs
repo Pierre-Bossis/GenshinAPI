@@ -77,7 +77,6 @@ namespace GenshinAPI.Tools.Mappers.Armes
             if (e is not null)
             {
                 string base64Icone = string.Empty;
-
                 if (!string.IsNullOrEmpty(e.Icone) && File.Exists(e.Icone))
                 {
                     byte[] imageBytes = File.ReadAllBytes(e.Icone);

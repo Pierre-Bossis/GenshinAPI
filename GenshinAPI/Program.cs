@@ -44,7 +44,7 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 builder.Services.AddCors(o => o.AddPolicy("angular", options =>
-    options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithExposedHeaders("Content-Disposition")));
+    options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()./*AllowCredentials().*/WithExposedHeaders("Content-Disposition")));
 
 var app = builder.Build();
 
@@ -53,13 +53,12 @@ if (app.Environment.IsDevelopment())
   app.UseSwagger();
   app.UseSwaggerUI();
 }
-
+app.UseStaticFiles();
 app.UseCors("angular");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\Armes\Icones\" />
     <Folder Include="Assets\LivresAptitude\" />
     <Folder Include="Assets\MateriauxElevationArmes\" />
     <Folder Include="Assets\MateriauxAmeliorationPersonnagesEtArmes\" />
