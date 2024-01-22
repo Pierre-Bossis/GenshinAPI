@@ -36,7 +36,7 @@ namespace GenshinAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            IEnumerable<ArmesDTO> armes = _armesService.GetAll().Select(arme => arme.ToDto());
+            IEnumerable<ArmesListDTO> armes = _armesService.GetAll().Select(arme => arme.ToDtoList());
             return Ok(armes);
         }
 

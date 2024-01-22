@@ -108,6 +108,34 @@ namespace GenshinAPI.Tools.Mappers.Armes
             }
             return null;
         }
+
+        public static ArmesListDTO ToDtoList(this ArmesEntity e)
+        {
+            if (e is not null)
+            {
+                string base64Image = string.Empty;
+
+                if (!string.IsNullOrEmpty(e.Image) && File.Exists(e.Image))
+                {
+                    byte[] imageBytes = File.ReadAllBytes(e.Image);
+                    base64Image = Convert.ToBase64String(imageBytes);
+                }
+
+                return new ArmesListDTO
+                {
+                    Id = e.Id,
+                    Nom = e.Nom,
+                    TypeArme = e.TypeArme,
+                    Image = base64Image,
+                    NomStatPrincipale = e.NomStatPrincipale,
+                    ValeurStatPrincipale = e.ValeurStatPrincipale,
+                    EffetPassif = e.EffetPassif,
+                    ATQBase = e.ATQBase,
+                    Rarete = e.Rarete
+                };
+            }
+            return null;
+        }
         #endregion
     }
 }
